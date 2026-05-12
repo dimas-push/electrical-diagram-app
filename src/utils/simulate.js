@@ -27,6 +27,13 @@ const ALWAYS_CONDUCTING = new Set([
   'fire_alarm','smoke_det','emergency_lt','acb','mccb',
   // Proses Industri
   'mixer_motor','conveyor_motor','filling_valve','uv_lamp','heat_ctrl','peristaltic',
+  // Electronics (passive/loads)
+  'e_resistor','e_resistor_var','e_cap_elec','e_cap_cer','e_inductor',
+  'e_diode','e_led_red','e_led_green','e_led_blue',
+  'e_npn','e_mosfet_n','e_555','e_opamp','e_relay_mod','e_l298n',
+  'e_arduino_uno','e_arduino_nano','e_esp32','e_esp8266',
+  'e_hcsr04','e_dht11','e_ldr','e_pir','e_buzzer','e_lcd16x2','e_oled',
+  'e_servo','e_joystick','e_breadboard','e_dcmotor','e_battery_9v','e_power_supply',
 ]);
 
 // Conduct only when switchStates[id] === true

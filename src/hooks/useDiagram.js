@@ -78,6 +78,15 @@ const IEC_TAG = {
   fire_alarm:'H', smoke_det:'B', emergency_lt:'H', acb:'Q', mccb:'Q',
   // Process loads
   filling_valve:'Y', uv_lamp:'H', heat_ctrl:'A',
+  // Electronics
+  e_resistor:'R', e_resistor_var:'RV', e_cap_elec:'C', e_cap_cer:'C', e_inductor:'L',
+  e_diode:'D', e_led_red:'H', e_led_green:'H', e_led_blue:'H',
+  e_npn:'V', e_mosfet_n:'V', e_555:'U', e_opamp:'U',
+  e_relay_mod:'K', e_l298n:'U',
+  e_arduino_uno:'A', e_arduino_nano:'A', e_esp32:'A', e_esp8266:'A',
+  e_hcsr04:'B', e_dht11:'B', e_ldr:'B', e_pir:'B',
+  e_buzzer:'H', e_lcd16x2:'H', e_oled:'H',
+  e_servo:'M', e_dcmotor:'M', e_battery_9v:'G', e_power_supply:'G',
 };
 
 function autoTag(placed, defId) {

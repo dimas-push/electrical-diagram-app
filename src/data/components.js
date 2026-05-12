@@ -1579,6 +1579,420 @@ export const COMPONENT_DEFS = [
       {type:'line',x1:18,y1:0,x2:24,y2:0,stroke:'#555',strokeWidth:1.5},
     ]},
 
+  // ══════════════════════════════════════════════════════
+  // ELECTRONICS — Arduino / Fritzing style (realistic)
+  // ══════════════════════════════════════════════════════
+
+  // ── Passive ───────────────────────────────────────────
+  { id:'e_resistor', name:'Resistor', category:'Electronics',
+    viewBox:'-28 -10 56 20', ports:[{x:-28,y:0},{x:28,y:0}],
+    symbol:[
+      {type:'line',x1:-28,y1:0,x2:-18,y2:0,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:18,y1:0,x2:28,y2:0,stroke:'#aaa',strokeWidth:1.5},
+      {type:'rect',x:-18,y:-7,width:36,height:14,rx:7,fill:'#d4b483',stroke:'#a07840',strokeWidth:1.2},
+      {type:'rect',x:-12,y:-7,width:4,height:14,rx:0,fill:'#8B4513',stroke:'none'},
+      {type:'rect',x:-4,y:-7,width:4,height:14,rx:0,fill:'#e53935',stroke:'none'},
+      {type:'rect',x:4,y:-7,width:4,height:14,rx:0,fill:'#111',stroke:'none'},
+      {type:'rect',x:12,y:-7,width:3,height:14,rx:0,fill:'#ffd700',stroke:'none'},
+    ]},
+
+  { id:'e_resistor_var', name:'Potensiometer', category:'Electronics',
+    viewBox:'-20 -24 40 44', ports:[{x:-20,y:8},{x:20,y:8},{x:0,y:-24}],
+    symbol:[
+      {type:'rect',x:-18,y:-4,width:36,height:24,rx:4,fill:'#1565c0',stroke:'#0d47a1',strokeWidth:1.5},
+      {type:'circle',cx:0,cy:8,r:8,fill:'#1976d2',stroke:'#0d47a1',strokeWidth:1},
+      {type:'circle',cx:0,cy:8,r:3,fill:'#fff',stroke:'none'},
+      {type:'line',x1:-20,y1:8,x2:-18,y2:8,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:18,y1:8,x2:20,y2:8,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:0,y1:-4,x2:0,y2:-24,stroke:'#aaa',strokeWidth:1.5},
+      {type:'text',x:0,y:-14,text:'POT',fontSize:5,fill:'#90caf9'},
+    ]},
+
+  { id:'e_cap_elec', name:'Kapasitor Elektrolitik', category:'Electronics',
+    viewBox:'-12 -28 24 44', ports:[{x:-6,y:16},{x:6,y:16}],
+    symbol:[
+      {type:'rect',x:-10,y:-26,width:20,height:38,rx:4,fill:'#1a237e',stroke:'#0d47a1',strokeWidth:1.5},
+      {type:'rect',x:-10,y:-26,width:8,height:38,rx:4,fill:'#e8eaf6',stroke:'none'},
+      {type:'text',x:-6,y:0,text:'－',fontSize:8,fill:'#1a237e'},
+      {type:'text',x:4,y:0,text:'＋',fontSize:8,fill:'#fff',fontWeight:'bold'},
+      {type:'line',x1:-6,y1:12,x2:-6,y2:16,stroke:'#aaa',strokeWidth:2},
+      {type:'line',x1:6,y1:12,x2:6,y2:16,stroke:'#aaa',strokeWidth:2},
+      {type:'line',x1:6,y1:12,x2:6,y2:4,stroke:'#aaa',strokeWidth:2},
+    ]},
+
+  { id:'e_cap_cer', name:'Kapasitor Keramik', category:'Electronics',
+    viewBox:'-14 -20 28 36', ports:[{x:-6,y:16},{x:6,y:16}],
+    symbol:[
+      {type:'ellipse',cx:0,cy:-4,rx:12,ry:14,fill:'#ff8f00',stroke:'#e65100',strokeWidth:1.5},
+      {type:'text',x:0,y:-2,text:'104',fontSize:5,fill:'#fff'},
+      {type:'line',x1:-6,y1:8,x2:-6,y2:16,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:6,y1:8,x2:6,y2:16,stroke:'#aaa',strokeWidth:1.5},
+    ]},
+
+  { id:'e_inductor', name:'Induktor / Koil', category:'Electronics',
+    viewBox:'-28 -12 56 20', ports:[{x:-28,y:0},{x:28,y:0}],
+    symbol:[
+      {type:'line',x1:-28,y1:0,x2:-20,y2:0,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:20,y1:0,x2:28,y2:0,stroke:'#aaa',strokeWidth:1.5},
+      {type:'path',d:'M-20,0 C-20,-10 -12,-10 -12,0 C-12,-10 -4,-10 -4,0 C-4,-10 4,-10 4,0 C4,-10 12,-10 12,0 C12,-10 20,-10 20,0',fill:'none',stroke:'#c0392b',strokeWidth:2},
+      {type:'rect',x:-21,y:2,width:42,height:4,rx:2,fill:'#b7c0cc',stroke:'#888',strokeWidth:0.5},
+    ]},
+
+  // ── Diodes ────────────────────────────────────────────
+  { id:'e_diode', name:'Dioda', category:'Electronics',
+    viewBox:'-20 -12 40 24', ports:[{x:-20,y:0},{x:20,y:0}],
+    symbol:[
+      {type:'line',x1:-20,y1:0,x2:-10,y2:0,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:10,y1:0,x2:20,y2:0,stroke:'#aaa',strokeWidth:1.5},
+      {type:'rect',x:-12,y:-8,width:22,height:16,rx:8,fill:'#e8e0d0',stroke:'#888',strokeWidth:1.2},
+      {type:'rect',x:6,y:-8,width:6,height:16,rx:3,fill:'#555',stroke:'none'},
+    ]},
+
+  { id:'e_led_red', name:'LED Merah', category:'Electronics',
+    viewBox:'-12 -28 24 44', ports:[{x:-6,y:16},{x:6,y:16}],
+    symbol:[
+      {type:'ellipse',cx:0,cy:-12,rx:10,ry:12,fill:'#f44336',stroke:'#b71c1c',strokeWidth:1.5},
+      {type:'rect',x:-10,y:-2,width:20,height:4,fill:'#d32f2f',stroke:'none'},
+      {type:'line',x1:-6,y1:2,x2:-6,y2:16,stroke:'#aaa',strokeWidth:2},
+      {type:'line',x1:6,y1:2,x2:6,y2:16,stroke:'#aaa',strokeWidth:2},
+      {type:'line',x1:-6,y1:2,x2:-6,y2:8,stroke:'#aaa',strokeWidth:2},
+    ]},
+
+  { id:'e_led_green', name:'LED Hijau', category:'Electronics',
+    viewBox:'-12 -28 24 44', ports:[{x:-6,y:16},{x:6,y:16}],
+    symbol:[
+      {type:'ellipse',cx:0,cy:-12,rx:10,ry:12,fill:'#4caf50',stroke:'#1b5e20',strokeWidth:1.5},
+      {type:'rect',x:-10,y:-2,width:20,height:4,fill:'#388e3c',stroke:'none'},
+      {type:'line',x1:-6,y1:2,x2:-6,y2:16,stroke:'#aaa',strokeWidth:2},
+      {type:'line',x1:6,y1:2,x2:6,y2:16,stroke:'#aaa',strokeWidth:2},
+      {type:'line',x1:-6,y1:2,x2:-6,y2:8,stroke:'#aaa',strokeWidth:2},
+    ]},
+
+  { id:'e_led_blue', name:'LED Biru', category:'Electronics',
+    viewBox:'-12 -28 24 44', ports:[{x:-6,y:16},{x:6,y:16}],
+    symbol:[
+      {type:'ellipse',cx:0,cy:-12,rx:10,ry:12,fill:'#2196f3',stroke:'#0d47a1',strokeWidth:1.5},
+      {type:'rect',x:-10,y:-2,width:20,height:4,fill:'#1565c0',stroke:'none'},
+      {type:'line',x1:-6,y1:2,x2:-6,y2:16,stroke:'#aaa',strokeWidth:2},
+      {type:'line',x1:6,y1:2,x2:6,y2:16,stroke:'#aaa',strokeWidth:2},
+      {type:'line',x1:-6,y1:2,x2:-6,y2:8,stroke:'#aaa',strokeWidth:2},
+    ]},
+
+  // ── Transistors ───────────────────────────────────────
+  { id:'e_npn', name:'Transistor NPN (BJT)', category:'Electronics',
+    viewBox:'-16 -24 32 44', ports:[{x:-16,y:0},{x:12,y:-20},{x:12,y:20}],
+    symbol:[
+      {type:'rect',x:-10,y:-22,width:22,height:40,rx:11,fill:'#212121',stroke:'#555',strokeWidth:1.5},
+      {type:'text',x:1,y:3,text:'NPN',fontSize:5,fill:'#90a4ae'},
+      {type:'line',x1:-16,y1:0,x2:-10,y2:0,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:12,y1:-20,x2:6,y2:-10,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:12,y1:20,x2:6,y2:10,stroke:'#aaa',strokeWidth:1.5},
+    ]},
+
+  { id:'e_mosfet_n', name:'MOSFET N-Channel', category:'Electronics',
+    viewBox:'-16 -28 32 52', ports:[{x:-16,y:0},{x:12,y:-24},{x:12,y:24}],
+    symbol:[
+      {type:'rect',x:-10,y:-26,width:22,height:48,rx:11,fill:'#212121',stroke:'#555',strokeWidth:1.5},
+      {type:'text',x:1,y:3,text:'MOS',fontSize:4.5,fill:'#90a4ae'},
+      {type:'text',x:1,y:10,text:'N-Ch',fontSize:4,fill:'#90a4ae'},
+      {type:'line',x1:-16,y1:0,x2:-10,y2:0,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:12,y1:-24,x2:6,y2:-12,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:12,y1:24,x2:6,y2:12,stroke:'#aaa',strokeWidth:1.5},
+    ]},
+
+  // ── Switches ──────────────────────────────────────────
+  { id:'e_pushbtn', name:'Push Button (Tactile)', category:'Electronics',
+    viewBox:'-18 -18 36 36', ports:[{x:-18,y:-10},{x:-18,y:10},{x:18,y:-10},{x:18,y:10}],
+    symbol:[
+      {type:'rect',x:-16,y:-16,width:32,height:32,rx:3,fill:'#e0e0e0',stroke:'#9e9e9e',strokeWidth:1.5},
+      {type:'circle',cx:0,cy:0,r:8,fill:'#f44336',stroke:'#b71c1c',strokeWidth:1.5},
+      {type:'circle',cx:0,cy:0,r:4,fill:'#e53935',stroke:'none'},
+      {type:'circle',cx:-12,cy:-12,r:2.5,fill:'#9e9e9e',stroke:'#757575',strokeWidth:1},
+      {type:'circle',cx:12,cy:-12,r:2.5,fill:'#9e9e9e',stroke:'#757575',strokeWidth:1},
+      {type:'circle',cx:-12,cy:12,r:2.5,fill:'#9e9e9e',stroke:'#757575',strokeWidth:1},
+      {type:'circle',cx:12,cy:12,r:2.5,fill:'#9e9e9e',stroke:'#757575',strokeWidth:1},
+    ]},
+
+  { id:'e_switch_spdt', name:'Switch SPDT', category:'Electronics',
+    viewBox:'-24 -16 48 28', ports:[{x:-24,y:0},{x:24,y:-12},{x:24,y:12}],
+    symbol:[
+      {type:'rect',x:-22,y:-14,width:44,height:26,rx:4,fill:'#37474f',stroke:'#263238',strokeWidth:1.5},
+      {type:'rect',x:-8,y:-6,width:16,height:10,rx:3,fill:'#e53935',stroke:'#b71c1c',strokeWidth:1},
+      {type:'line',x1:-22,y1:0,x2:-8,y2:0,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:8,y1:-4,x2:22,y2:-12,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:8,y1:4,x2:22,y2:12,stroke:'#aaa',strokeWidth:1.5},
+    ]},
+
+  // ── ICs & Modules ─────────────────────────────────────
+  { id:'e_555', name:'IC 555 Timer', category:'Electronics',
+    viewBox:'-24 -28 48 52', ports:[{x:-24,y:-20},{x:-24,y:0},{x:-24,y:20},{x:24,y:-20},{x:24,y:0},{x:24,y:20}],
+    symbol:[
+      {type:'rect',x:-20,y:-26,width:40,height:48,rx:3,fill:'#212121',stroke:'#555',strokeWidth:1.5},
+      {type:'circle',cx:-20,cy:-26,r:4,fill:'#333',stroke:'none'},
+      {type:'text',x:0,y:-14,text:'555',fontSize:9,fill:'#fff',fontWeight:'bold'},
+      {type:'text',x:0,y:0,text:'TIMER',fontSize:5,fill:'#90a4ae'},
+      {type:'line',x1:-24,y1:-20,x2:-20,y2:-20,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:-24,y1:0,x2:-20,y2:0,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:-24,y1:20,x2:-20,y2:20,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:24,y1:-20,x2:20,y2:-20,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:24,y1:0,x2:20,y2:0,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:24,y1:20,x2:20,y2:20,stroke:'#aaa',strokeWidth:1.5},
+    ]},
+
+  { id:'e_opamp', name:'Op-Amp (LM741)', category:'Electronics',
+    viewBox:'-24 -28 48 52', ports:[{x:-24,y:-14},{x:-24,y:14},{x:24,y:0},{x:0,y:-28},{x:0,y:28}],
+    symbol:[
+      {type:'rect',x:-20,y:-26,width:40,height:48,rx:3,fill:'#212121',stroke:'#555',strokeWidth:1.5},
+      {type:'circle',cx:-20,cy:-26,r:4,fill:'#333',stroke:'none'},
+      {type:'text',x:0,y:-8,text:'741',fontSize:8,fill:'#fff',fontWeight:'bold'},
+      {type:'text',x:0,y:4,text:'OP-AMP',fontSize:4,fill:'#90a4ae'},
+      {type:'line',x1:-24,y1:-14,x2:-20,y2:-14,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:-24,y1:14,x2:-20,y2:14,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:24,y1:0,x2:20,y2:0,stroke:'#aaa',strokeWidth:1.5},
+    ]},
+
+  { id:'e_relay_mod', name:'Relay Module 5V', category:'Electronics',
+    viewBox:'-28 -22 56 44', ports:[{x:-28,y:-14},{x:-28,y:0},{x:-28,y:14},{x:28,y:-14},{x:28,y:0},{x:28,y:14}],
+    symbol:[
+      {type:'rect',x:-26,y:-20,width:52,height:40,rx:4,fill:'#1a237e',stroke:'#0d47a1',strokeWidth:1.5},
+      {type:'rect',x:-14,y:-12,width:18,height:22,rx:3,fill:'#212121',stroke:'#555',strokeWidth:1},
+      {type:'rect',x:6,y:-12,width:18,height:22,rx:2,fill:'#2e7d32',stroke:'#1b5e20',strokeWidth:1},
+      {type:'text',x:-5,y:2,text:'RLY',fontSize:5,fill:'#fff'},
+      {type:'text',x:15,y:2,text:'5V',fontSize:5,fill:'#a5d6a7'},
+      {type:'circle',cx:-20,cy:-14,r:2,fill:'#76ff03',stroke:'none'},
+    ]},
+
+  { id:'e_l298n', name:'L298N Motor Driver', category:'Electronics',
+    viewBox:'-32 -28 64 52', ports:[{x:-32,y:-20},{x:-32,y:0},{x:-32,y:20},{x:32,y:-20},{x:32,y:0},{x:32,y:20}],
+    symbol:[
+      {type:'rect',x:-30,y:-26,width:60,height:48,rx:4,fill:'#1565c0',stroke:'#0d47a1',strokeWidth:1.5},
+      {type:'rect',x:-12,y:-14,width:24,height:28,rx:3,fill:'#212121',stroke:'#555',strokeWidth:1},
+      {type:'text',x:0,y:-4,text:'L298N',fontSize:6,fill:'#fff',fontWeight:'bold'},
+      {type:'text',x:0,y:6,text:'MOTOR',fontSize:5,fill:'#90caf9'},
+      {type:'text',x:0,y:14,text:'DRIVER',fontSize:5,fill:'#90caf9'},
+    ]},
+
+  // ── Arduino Boards ────────────────────────────────────
+  { id:'e_arduino_uno', name:'Arduino Uno', category:'Electronics',
+    viewBox:'-44 -36 88 72', ports:[{x:-44,y:-20},{x:-44,y:0},{x:-44,y:20},{x:44,y:-20},{x:44,y:0},{x:44,y:20}],
+    symbol:[
+      {type:'rect',x:-42,y:-34,width:84,height:68,rx:6,fill:'#006f9e',stroke:'#004b6e',strokeWidth:2},
+      {type:'rect',x:-42,y:-34,width:84,height:12,rx:6,fill:'#004b6e',stroke:'none'},
+      {type:'text',x:0,y:-22,text:'Arduino',fontSize:7,fill:'#fff',fontWeight:'bold'},
+      {type:'text',x:0,y:-12,text:'UNO R3',fontSize:5.5,fill:'#80deea'},
+      // USB connector
+      {type:'rect',x:-42,y:-8,width:10,height:16,rx:2,fill:'#555',stroke:'#333',strokeWidth:1},
+      {type:'rect',x:-38,y:-6,width:6,height:12,rx:1,fill:'#888',stroke:'none'},
+      // reset button
+      {type:'circle',cx:20,cy:-22,r:5,fill:'#e53935',stroke:'#b71c1c',strokeWidth:1},
+      // power LED
+      {type:'circle',cx:32,cy:-22,r:3,fill:'#4caf50',stroke:'none'},
+      // crystal
+      {type:'rect',x:-8,y:8,width:16,height:8,rx:2,fill:'#c0c0c0',stroke:'#999',strokeWidth:1},
+      // chip
+      {type:'rect',x:-16,y:2,width:32,height:22,rx:3,fill:'#212121',stroke:'#555',strokeWidth:1},
+      {type:'text',x:0,y:16,text:'ATmega328',fontSize:4.5,fill:'#90a4ae'},
+      // pin headers (top)
+      {type:'rect',x:-40,y:-34,width:80,height:6,rx:2,fill:'#212121',stroke:'#555',strokeWidth:0.5},
+      {type:'rect',x:-40,y:28,width:80,height:6,rx:2,fill:'#212121',stroke:'#555',strokeWidth:0.5},
+    ]},
+
+  { id:'e_arduino_nano', name:'Arduino Nano', category:'Electronics',
+    viewBox:'-24 -36 48 72', ports:[{x:-24,y:-24},{x:-24,y:0},{x:-24,y:24},{x:24,y:-24},{x:24,y:0},{x:24,y:24}],
+    symbol:[
+      {type:'rect',x:-22,y:-34,width:44,height:68,rx:4,fill:'#006f9e',stroke:'#004b6e',strokeWidth:1.5},
+      {type:'text',x:0,y:-24,text:'NANO',fontSize:6.5,fill:'#fff',fontWeight:'bold'},
+      // USB micro
+      {type:'rect',x:-8,y:-34,width:16,height:8,rx:2,fill:'#555',stroke:'#333',strokeWidth:1},
+      // chip
+      {type:'rect',x:-14,y:-10,width:28,height:20,rx:2,fill:'#212121',stroke:'#555',strokeWidth:1},
+      {type:'text',x:0,y:2,text:'328P',fontSize:5,fill:'#90a4ae'},
+      // pin rows
+      {type:'rect',x:-22,y:-34,width:5,height:68,rx:2,fill:'#263238',stroke:'#555',strokeWidth:0.5},
+      {type:'rect',x:17,y:-34,width:5,height:68,rx:2,fill:'#263238',stroke:'#555',strokeWidth:0.5},
+    ]},
+
+  { id:'e_esp32', name:'ESP32 DevKit', category:'Electronics',
+    viewBox:'-28 -44 56 88', ports:[{x:-28,y:-32},{x:-28,y:0},{x:-28,y:32},{x:28,y:-32},{x:28,y:0},{x:28,y:32}],
+    symbol:[
+      {type:'rect',x:-26,y:-42,width:52,height:84,rx:5,fill:'#212121',stroke:'#555',strokeWidth:1.5},
+      // antenna area
+      {type:'rect',x:-10,y:-42,width:20,height:12,rx:2,fill:'#c0c0c0',stroke:'#888',strokeWidth:1},
+      {type:'text',x:0,y:-34,text:'WiFi',fontSize:4,fill:'#333'},
+      // module
+      {type:'rect',x:-18,y:-26,width:36,height:28,rx:3,fill:'#455a64',stroke:'#37474f',strokeWidth:1},
+      {type:'text',x:0,y:-16,text:'ESP32',fontSize:7,fill:'#80cbc4',fontWeight:'bold'},
+      {type:'text',x:0,y:-6,text:'DevKit',fontSize:5,fill:'#90a4ae'},
+      // USB
+      {type:'rect',x:-8,y:30,width:16,height:10,rx:2,fill:'#555',stroke:'#333',strokeWidth:1},
+      // pin rows
+      {type:'rect',x:-26,y:-42,width:5,height:84,rx:2,fill:'#1a237e',stroke:'#555',strokeWidth:0.5},
+      {type:'rect',x:21,y:-42,width:5,height:84,rx:2,fill:'#1a237e',stroke:'#555',strokeWidth:0.5},
+    ]},
+
+  { id:'e_esp8266', name:'ESP8266 (NodeMCU)', category:'Electronics',
+    viewBox:'-24 -40 48 80', ports:[{x:-24,y:-28},{x:-24,y:0},{x:-24,y:28},{x:24,y:-28},{x:24,y:0},{x:24,y:28}],
+    symbol:[
+      {type:'rect',x:-22,y:-38,width:44,height:76,rx:4,fill:'#212121',stroke:'#555',strokeWidth:1.5},
+      {type:'rect',x:-8,y:-38,width:16,height:10,rx:2,fill:'#c0c0c0',stroke:'#888',strokeWidth:1},
+      {type:'rect',x:-16,y:-24,width:32,height:22,rx:3,fill:'#263238',stroke:'#37474f',strokeWidth:1},
+      {type:'text',x:0,y:-14,text:'ESP',fontSize:8,fill:'#4fc3f7',fontWeight:'bold'},
+      {type:'text',x:0,y:-5,text:'8266',fontSize:6,fill:'#90a4ae'},
+      {type:'rect',x:-8,y:26,width:16,height:10,rx:2,fill:'#555',stroke:'#333',strokeWidth:1},
+      {type:'rect',x:-22,y:-38,width:5,height:76,rx:2,fill:'#1a237e',stroke:'#555',strokeWidth:0.5},
+      {type:'rect',x:17,y:-38,width:5,height:76,rx:2,fill:'#1a237e',stroke:'#555',strokeWidth:0.5},
+    ]},
+
+  // ── Sensors (Arduino modules) ─────────────────────────
+  { id:'e_hcsr04', name:'Sensor Ultrasonik HC-SR04', category:'Electronics',
+    viewBox:'-36 -20 72 40', ports:[{x:-36,y:-14},{x:-36,y:-5},{x:-36,y:5},{x:-36,y:14}],
+    symbol:[
+      {type:'rect',x:-34,y:-18,width:68,height:36,rx:4,fill:'#1565c0',stroke:'#0d47a1',strokeWidth:1.5},
+      {type:'circle',cx:8,cy:0,r:12,fill:'#c0c0c0',stroke:'#888',strokeWidth:1.5},
+      {type:'circle',cx:8,cy:0,r:7,fill:'#888',stroke:'#555',strokeWidth:1},
+      {type:'circle',cx:-14,cy:0,r:12,fill:'#c0c0c0',stroke:'#888',strokeWidth:1.5},
+      {type:'circle',cx:-14,cy:0,r:7,fill:'#888',stroke:'#555',strokeWidth:1},
+      {type:'text',x:-34,y:14,text:'HC-SR04',fontSize:4.5,fill:'#fff'},
+    ]},
+
+  { id:'e_dht11', name:'Sensor Suhu & Kelembaban DHT11', category:'Electronics',
+    viewBox:'-16 -24 32 40', ports:[{x:-16,y:8},{x:-8,y:16},{x:8,y:16}],
+    symbol:[
+      {type:'rect',x:-14,y:-22,width:28,height:32,rx:4,fill:'#1565c0',stroke:'#0d47a1',strokeWidth:1.5},
+      {type:'rect',x:-14,y:-22,width:28,height:10,rx:4,fill:'#0d47a1',stroke:'none'},
+      {type:'text',x:0,y:-16,text:'DHT11',fontSize:5,fill:'#fff',fontWeight:'bold'},
+      {type:'path',d:'M-8,2 Q-4,-4 0,2 Q4,8 8,2',fill:'none',stroke:'#90caf9',strokeWidth:1.5},
+      {type:'text',x:0,y:8,text:'T/H',fontSize:5,fill:'#90caf9'},
+      {type:'line',x1:-8,y1:10,x2:-8,y2:16,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:0,y1:10,x2:0,y2:16,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:8,y1:10,x2:8,y2:16,stroke:'#aaa',strokeWidth:1.5},
+    ]},
+
+  { id:'e_ldr', name:'LDR (Fotoresistor)', category:'Electronics',
+    viewBox:'-16 -16 32 28', ports:[{x:-12,y:12},{x:12,y:12}],
+    symbol:[
+      {type:'circle',cx:0,cy:-2,rx:12,ry:12,fill:'#e8d5a3',stroke:'#a07840',strokeWidth:1.5},
+      {type:'path',d:'M-8,-2 L-4,4 L0,-4 L4,4 L8,-2',fill:'none',stroke:'#a07840',strokeWidth:2,strokeLinejoin:'round'},
+      {type:'line',x1:-10,y1:-10,x2:-6,y2:-14,stroke:'#ffd740',strokeWidth:1.5},
+      {type:'line',x1:0,y1:-12,x2:0,y2:-16,stroke:'#ffd740',strokeWidth:1.5},
+      {type:'line',x1:10,y1:-10,x2:14,y2:-14,stroke:'#ffd740',strokeWidth:1.5},
+      {type:'line',x1:-12,y1:10,x2:-12,y2:12,stroke:'#aaa',strokeWidth:1.5},
+      {type:'line',x1:12,y1:10,x2:12,y2:12,stroke:'#aaa',strokeWidth:1.5},
+    ]},
+
+  { id:'e_pir', name:'Sensor PIR (Gerak)', category:'Electronics',
+    viewBox:'-20 -24 40 40', ports:[{x:-20,y:8},{x:0,y:8},{x:20,y:8}],
+    symbol:[
+      {type:'ellipse',cx:0,cy:-8,rx:18,ry:18,fill:'#f5f5f5',stroke:'#9e9e9e',strokeWidth:1.5},
+      {type:'ellipse',cx:0,cy:-8,rx:12,ry:12,fill:'#fff9c4',stroke:'#f9a825',strokeWidth:1},
+      {type:'ellipse',cx:0,cy:-8,rx:5,ry:5,fill:'#f9a825',stroke:'none'},
+      {type:'text',x:0,y:0,text:'PIR',fontSize:5,fill:'#e65100'},
+      {type:'line',x1:-20,y1:8,x2:-20,y2:8,stroke:'#aaa',strokeWidth:1.5},
+    ]},
+
+  { id:'e_buzzer', name:'Buzzer', category:'Electronics',
+    viewBox:'-14 -20 28 32', ports:[{x:-8,y:12},{x:8,y:12}],
+    symbol:[
+      {type:'circle',cx:0,cy:-4,r:12,fill:'#212121',stroke:'#555',strokeWidth:1.5},
+      {type:'circle',cx:0,cy:-4,r:7,fill:'#555',stroke:'#333',strokeWidth:1},
+      {type:'circle',cx:0,cy:-4,r:3,fill:'#888',stroke:'none'},
+      {type:'text',x:0,y:-2,text:'♪',fontSize:6,fill:'#aaa'},
+      {type:'line',x1:-8,y1:8,x2:-8,y2:12,stroke:'#aaa',strokeWidth:2},
+      {type:'line',x1:8,y1:8,x2:8,y2:12,stroke:'#aaa',strokeWidth:2},
+      {type:'line',x1:-8,y1:8,x2:-8,y2:6,stroke:'#aaa',strokeWidth:2},
+    ]},
+
+  { id:'e_lcd16x2', name:'LCD 16x2', category:'Electronics',
+    viewBox:'-44 -22 88 44', ports:[{x:-44,y:-14},{x:-44,y:0},{x:-44,y:14}],
+    symbol:[
+      {type:'rect',x:-42,y:-20,width:84,height:40,rx:4,fill:'#2e7d32',stroke:'#1b5e20',strokeWidth:1.5},
+      {type:'rect',x:-34,y:-12,width:68,height:24,rx:2,fill:'#64b5f6',stroke:'#1565c0',strokeWidth:1},
+      {type:'text',x:0,y:-4,text:'LCD 16x2',fontSize:5.5,fill:'#212121',fontWeight:'bold'},
+      {type:'text',x:0,y:6,text:'Hello World!',fontSize:5,fill:'#0d47a1'},
+    ]},
+
+  { id:'e_oled', name:'OLED Display 0.96"', category:'Electronics',
+    viewBox:'-28 -22 56 44', ports:[{x:-28,y:-12},{x:-28,y:-4},{x:-28,y:4},{x:-28,y:12}],
+    symbol:[
+      {type:'rect',x:-26,y:-20,width:52,height:40,rx:4,fill:'#212121',stroke:'#555',strokeWidth:1.5},
+      {type:'rect',x:-18,y:-12,width:36,height:24,rx:2,fill:'#000',stroke:'#444',strokeWidth:1},
+      {type:'text',x:0,y:-4,text:'OLED',fontSize:6,fill:'#4fc3f7',fontWeight:'bold'},
+      {type:'text',x:0,y:5,text:'0.96"',fontSize:5,fill:'#4fc3f7'},
+    ]},
+
+  { id:'e_servo', name:'Servo Motor', category:'Electronics',
+    viewBox:'-24 -20 48 40', ports:[{x:-24,y:-12},{x:-24,y:0},{x:-24,y:12}],
+    symbol:[
+      {type:'rect',x:-22,y:-18,width:44,height:36,rx:4,fill:'#ff8f00',stroke:'#e65100',strokeWidth:1.5},
+      {type:'circle',cx:8,cy:0,r:12,fill:'#f57f17',stroke:'#e65100',strokeWidth:1},
+      {type:'circle',cx:8,cy:0,r:5,fill:'#fff',stroke:'#aaa',strokeWidth:1},
+      {type:'rect',x:8,y:-12,width:8,height:4,rx:2,fill:'#fff',stroke:'#aaa',strokeWidth:1},
+      {type:'text',x:-6,y:2,text:'SRV',fontSize:6,fill:'#fff',fontWeight:'bold'},
+    ]},
+
+  { id:'e_joystick', name:'Joystick Module', category:'Electronics',
+    viewBox:'-20 -24 40 44', ports:[{x:-20,y:-16},{x:-20,y:-8},{x:-20,y:0},{x:-20,y:8},{x:-20,y:16}],
+    symbol:[
+      {type:'rect',x:-18,y:-22,width:36,height:40,rx:4,fill:'#263238',stroke:'#37474f',strokeWidth:1.5},
+      {type:'circle',cx:4,cy:-2,r:12,fill:'#37474f',stroke:'#263238',strokeWidth:1},
+      {type:'circle',cx:4,cy:-2,r:6,fill:'#546e7a',stroke:'#455a64',strokeWidth:1},
+      {type:'circle',cx:4,cy:-2,r:3,fill:'#78909c',stroke:'none'},
+    ]},
+
+  { id:'e_breadboard', name:'Breadboard', category:'Electronics',
+    viewBox:'-48 -32 96 64', ports:[{x:-48,y:-20},{x:-48,y:20},{x:48,y:-20},{x:48,y:20}],
+    symbol:[
+      {type:'rect',x:-46,y:-30,width:92,height:60,rx:4,fill:'#f5f5f5',stroke:'#bdbdbd',strokeWidth:1.5},
+      // center gap
+      {type:'rect',x:-46,y:-4,width:92,height:8,rx:0,fill:'#e0e0e0',stroke:'none'},
+      // power rails top
+      {type:'rect',x:-40,y:-28,width:80,height:8,rx:2,fill:'#fff',stroke:'#e0e0e0',strokeWidth:0.5},
+      {type:'rect',x:-40,y:20,width:80,height:8,rx:2,fill:'#fff',stroke:'#e0e0e0',strokeWidth:0.5},
+      // hole rows (dots)
+      {type:'text',x:0,y:-18,text:'• • • • • • • • • • • • • • • • • • • • • • •',fontSize:3,fill:'#9e9e9e'},
+      {type:'text',x:0,y:-12,text:'• • • • • • • • • • • • • • • • • • • • • • •',fontSize:3,fill:'#9e9e9e'},
+      {type:'text',x:0,y:4,text:'• • • • • • • • • • • • • • • • • • • • • • •',fontSize:3,fill:'#9e9e9e'},
+      {type:'text',x:0,y:10,text:'• • • • • • • • • • • • • • • • • • • • • • •',fontSize:3,fill:'#9e9e9e'},
+      {type:'text',x:0,y:24,text:'+ + + + + + + + + + + + + + + + + + + + + +',fontSize:3,fill:'#e53935'},
+      {type:'text',x:0,y:-24,text:'+ + + + + + + + + + + + + + + + + + + + + +',fontSize:3,fill:'#e53935'},
+    ]},
+
+  { id:'e_dcmotor', name:'Motor DC', category:'Electronics',
+    viewBox:'-28 -20 56 40', ports:[{x:-28,y:-10},{x:-28,y:10}],
+    symbol:[
+      {type:'rect',x:-26,y:-18,width:52,height:36,rx:18,fill:'#c0392b',stroke:'#922b21',strokeWidth:2},
+      {type:'rect',x:14,y:-10,width:12,height:6,rx:1,fill:'#888',stroke:'#555',strokeWidth:1},
+      {type:'rect',x:14,y:4,width:12,height:6,rx:1,fill:'#888',stroke:'#555',strokeWidth:1},
+      {type:'text',x:-4,y:2,text:'M',fontSize:12,fill:'#fff',fontWeight:'bold'},
+      {type:'text',x:-4,y:10,text:'DC',fontSize:5,fill:'#ff8a80'},
+      {type:'line',x1:-28,y1:-10,x2:-26,y2:-10,stroke:'#e53935',strokeWidth:2},
+      {type:'line',x1:-28,y1:10,x2:-26,y2:10,stroke:'#212121',strokeWidth:2},
+    ]},
+
+  { id:'e_battery_9v', name:'Baterai 9V', category:'Electronics',
+    viewBox:'-16 -28 32 52', ports:[{x:0,y:-28},{x:0,y:24}],
+    symbol:[
+      {type:'rect',x:-14,y:-24,width:28,height:40,rx:4,fill:'#212121',stroke:'#555',strokeWidth:1.5},
+      {type:'rect',x:-8,y:-28,width:7,height:6,rx:2,fill:'#888',stroke:'#555',strokeWidth:1},
+      {type:'rect',x:1,y:-30,width:7,height:8,rx:2,fill:'#888',stroke:'#555',strokeWidth:1},
+      {type:'rect',x:-10,y:-18,width:20,height:10,rx:2,fill:'#1565c0',stroke:'none'},
+      {type:'text',x:0,y:-12,text:'9V',fontSize:6,fill:'#fff',fontWeight:'bold'},
+      {type:'text',x:0,y:4,text:'6F22',fontSize:4,fill:'#aaa'},
+      {type:'line',x1:0,y1:16,x2:0,y2:24,stroke:'#aaa',strokeWidth:1.5},
+    ]},
+
+  { id:'e_power_supply', name:'Power Supply / Adaptor', category:'Electronics',
+    viewBox:'-28 -20 56 40', ports:[{x:28,y:-10},{x:28,y:10}],
+    symbol:[
+      {type:'rect',x:-26,y:-18,width:52,height:36,rx:4,fill:'#37474f',stroke:'#263238',strokeWidth:1.5},
+      {type:'rect',x:-24,y:-16,width:32,height:32,rx:3,fill:'#455a64',stroke:'#263238',strokeWidth:1},
+      {type:'text',x:-8,y:0,text:'PSU',fontSize:7,fill:'#80cbc4',fontWeight:'bold'},
+      {type:'text',x:-8,y:9,text:'DC',fontSize:5,fill:'#80cbc4'},
+      {type:'circle',cx:20,cy:0,r:6,fill:'#212121',stroke:'#555',strokeWidth:1},
+      {type:'line',x1:26,y1:-10,x2:28,y2:-10,stroke:'#e53935',strokeWidth:2},
+      {type:'line',x1:26,y1:10,x2:28,y2:10,stroke:'#212121',strokeWidth:2},
+    ]},
+
 ];
 
-export const CATEGORIES = ['Schneider','ABB','Siemens','Legrand','Generic','Rumah Tangga','Kontrol','Sensor','Motor & Drive','Proteksi','Daya','Aktuator','HVAC & Utilitas','Instrumen','Bangunan','Proses Industri'];
+export const CATEGORIES = ['Schneider','ABB','Siemens','Legrand','Generic','Rumah Tangga','Kontrol','Sensor','Motor & Drive','Proteksi','Daya','Aktuator','HVAC & Utilitas','Instrumen','Bangunan','Proses Industri','Electronics'];
