@@ -11,34 +11,46 @@ export const COMPONENT_DEFS = [
     id: 'sch_mcb1',
     name: 'MCB 1P – Easy9',
     category: 'Schneider',
-    viewBox: '-14 -40 28 80',
-    ports: [{ x: 0, y: -40 }, { x: 0, y: 40 }],
+    viewBox: '-16 -42 32 86',
+    ports: [{ x: 0, y: -42 }, { x: 0, y: 42 }],
     symbol: [
+      // shadow
+      { type: 'rect', x: -13, y: -31, width: 26, height: 70, rx: 5, fill: '#00000028', stroke: 'none', filter: 'url(#fShadow)' },
       // body
-      { type: 'rect', x: -12, y: -34, width: 24, height: 68, rx: 3, fill: '#f5f5f5', stroke: '#bbb', strokeWidth: 1 },
+      { type: 'rect', x: -14, y: -33, width: 26, height: 70, rx: 5, fill: 'url(#gBodyGray)', stroke: '#999', strokeWidth: 1 },
+      // edge highlights
+      { type: 'rect', x: -14, y: -33, width: 3, height: 70, rx: 2, fill: '#fff', stroke: 'none', opacity: 0.6 },
+      { type: 'rect', x: -14, y: -33, width: 26, height: 3, rx: 2, fill: '#fff', stroke: 'none', opacity: 0.6 },
+      { type: 'rect', x: 9,   y: -28, width: 2,  height: 58, rx: 1, fill: '#888', stroke: 'none', opacity: 0.4 },
       // top cap
-      { type: 'rect', x: -12, y: -34, width: 24, height: 12, rx: 3, fill: '#e0e0e0', stroke: '#bbb', strokeWidth: 0.8 },
+      { type: 'rect', x: -14, y: -33, width: 26, height: 16, rx: 5, fill: 'url(#gCap)', stroke: '#aaa', strokeWidth: 0.8 },
+      { type: 'rect', x: -13, y: -33, width: 24, height: 7,  rx: 4, fill: '#fff', stroke: 'none', opacity: 0.5 },
       // bottom cap
-      { type: 'rect', x: -12, y: 22, width: 24, height: 12, rx: 3, fill: '#e0e0e0', stroke: '#bbb', strokeWidth: 0.8 },
-      // wire entries
-      { type: 'line', x1: 0, y1: -40, x2: 0, y2: -34, stroke: '#555', strokeWidth: 1.5 },
-      { type: 'line', x1: 0, y1: 34, x2: 0, y2: 40, stroke: '#555', strokeWidth: 1.5 },
-      // screws
-      { type: 'circle', cx: 0, cy: -28, r: 4, fill: '#c8c8c8', stroke: '#999', strokeWidth: 0.8 },
-      { type: 'line', x1: -2.8, y1: -28, x2: 2.8, y2: -28, stroke: '#777', strokeWidth: 0.8 },
-      { type: 'circle', cx: 0, cy: 28, r: 4, fill: '#c8c8c8', stroke: '#999', strokeWidth: 0.8 },
-      { type: 'line', x1: -2.8, y1: 28, x2: 2.8, y2: 28, stroke: '#777', strokeWidth: 0.8 },
-      // green Schneider logo band
-      { type: 'rect', x: -12, y: -20, width: 24, height: 8, rx: 0, fill: '#009530', stroke: 'none' },
-      { type: 'text', x: 0, y: -16, text: 'Schneider', fontSize: 4, fill: '#fff', fontWeight: 'bold' },
-      // orange rocker toggle
-      { type: 'rect', x: -10, y: -10, width: 20, height: 24, rx: 3, fill: '#f5a623', stroke: '#d4891e', strokeWidth: 1 },
-      { type: 'rect', x: -8, y: -8, width: 16, height: 9, rx: 2, fill: '#ffc84a', stroke: 'none' },
-      { type: 'text', x: 0, y: -3, text: 'I', fontSize: 8, fill: '#7a4800', fontWeight: 'bold' },
-      { type: 'text', x: 0, y: 8, text: 'O', fontSize: 7, fill: '#7a4800', fontWeight: 'bold' },
-      // product label
-      { type: 'rect', x: -10, y: 15, width: 20, height: 7, rx: 1, fill: '#fff', stroke: '#ddd', strokeWidth: 0.5 },
-      { type: 'text', x: 0, y: 18, text: 'Easy9', fontSize: 5, fill: '#009530', fontWeight: 'bold' },
+      { type: 'rect', x: -14, y: 20,  width: 26, height: 16, rx: 5, fill: 'url(#gCap)', stroke: '#aaa', strokeWidth: 0.8 },
+      { type: 'rect', x: -13, y: 20,  width: 24, height: 7,  rx: 4, fill: '#fff', stroke: 'none', opacity: 0.4 },
+      // wire stubs
+      { type: 'line', x1: 0, y1: -42, x2: 0, y2: -33, stroke: '#777', strokeWidth: 2 },
+      { type: 'line', x1: 0, y1: 36,  x2: 0, y2: 42,  stroke: '#777', strokeWidth: 2 },
+      // 3D screws
+      { type: 'circle', cx: 0, cy: -26, r: 5.5, fill: '#aaa',  stroke: 'none' },
+      { type: 'circle', cx: 0, cy: -26, r: 5,   fill: 'url(#gScrew)', stroke: '#888', strokeWidth: 0.8 },
+      { type: 'line',   x1: -2.8, y1: -26, x2: 2.8, y2: -26, stroke: '#666', strokeWidth: 1 },
+      { type: 'circle', cx: 0, cy: 28,  r: 5.5, fill: '#aaa',  stroke: 'none' },
+      { type: 'circle', cx: 0, cy: 28,  r: 5,   fill: 'url(#gScrew)', stroke: '#888', strokeWidth: 0.8 },
+      { type: 'line',   x1: -2.8, y1: 28, x2: 2.8, y2: 28, stroke: '#666', strokeWidth: 1 },
+      // Schneider green band
+      { type: 'rect', x: -14, y: -18, width: 26, height: 9, fill: 'url(#gGreenSch)', stroke: 'none' },
+      { type: 'rect', x: -14, y: -18, width: 26, height: 4, fill: '#fff', stroke: 'none', opacity: 0.15 },
+      { type: 'text', x: -1, y: -13, text: 'Schneider', fontSize: 3.8, fill: '#fff', fontWeight: 'bold' },
+      // orange rocker
+      { type: 'rect', x: -11, y: -7,  width: 20, height: 25, rx: 4, fill: '#00000020', stroke: 'none' },
+      { type: 'rect', x: -12, y: -8,  width: 20, height: 25, rx: 4, fill: 'url(#gOrange)', stroke: '#c47a10', strokeWidth: 1 },
+      { type: 'rect', x: -10, y: -7,  width: 16, height: 10, rx: 3, fill: '#fff', stroke: 'none', opacity: 0.35 },
+      { type: 'text', x: -2, y: -1,   text: 'I', fontSize: 9, fill: '#7a3800', fontWeight: 'bold' },
+      { type: 'text', x: -2, y: 11,   text: 'O', fontSize: 8, fill: '#7a3800', fontWeight: 'bold' },
+      // label
+      { type: 'rect', x: -12, y: 18,  width: 22, height: 7,  rx: 1.5, fill: '#fff', stroke: '#ccc', strokeWidth: 0.5 },
+      { type: 'text', x: -1, y: 21.5, text: 'Easy9', fontSize: 5, fill: '#009530', fontWeight: 'bold' },
     ],
   },
 
@@ -46,40 +58,81 @@ export const COMPONENT_DEFS = [
     id: 'sch_mcb3',
     name: 'MCB 3P – iC60N',
     category: 'Schneider',
-    viewBox: '-36 -40 72 80',
+    viewBox: '-36 -42 76 88',
     ports: [
-      { x: -20, y: -40 }, { x: 0, y: -40 }, { x: 20, y: -40 },
-      { x: -20, y: 40 },  { x: 0, y: 40 },  { x: 20, y: 40 },
+      { x: -20, y: -42 }, { x: 0, y: -42 }, { x: 20, y: -42 },
+      { x: -20, y: 42 },  { x: 0, y: 42 },  { x: 20, y: 42 },
     ],
     symbol: [
-      { type: 'rect', x: -34, y: -34, width: 68, height: 68, rx: 3, fill: '#f5f5f5', stroke: '#bbb', strokeWidth: 1 },
-      { type: 'rect', x: -34, y: -34, width: 68, height: 12, rx: 3, fill: '#e0e0e0', stroke: '#bbb', strokeWidth: 0.8 },
-      { type: 'rect', x: -34, y: 22, width: 68, height: 12, rx: 3, fill: '#e0e0e0', stroke: '#bbb', strokeWidth: 0.8 },
-      { type: 'line', x1: -10, y1: -32, x2: -10, y2: 30, stroke: '#ccc', strokeWidth: 0.8 },
-      { type: 'line', x1: 10,  y1: -32, x2: 10,  y2: 30, stroke: '#ccc', strokeWidth: 0.8 },
-      // wire entries + screws
-      { type: 'line', x1: -20, y1: -40, x2: -20, y2: -34, stroke: '#555', strokeWidth: 1.5 },
-      { type: 'line', x1: 0,   y1: -40, x2: 0,   y2: -34, stroke: '#555', strokeWidth: 1.5 },
-      { type: 'line', x1: 20,  y1: -40, x2: 20,  y2: -34, stroke: '#555', strokeWidth: 1.5 },
-      { type: 'line', x1: -20, y1: 34, x2: -20, y2: 40, stroke: '#555', strokeWidth: 1.5 },
-      { type: 'line', x1: 0,   y1: 34, x2: 0,   y2: 40, stroke: '#555', strokeWidth: 1.5 },
-      { type: 'line', x1: 20,  y1: 34, x2: 20,  y2: 40, stroke: '#555', strokeWidth: 1.5 },
-      { type: 'circle', cx: -20, cy: -27, r: 4, fill: '#c8c8c8', stroke: '#999', strokeWidth: 0.8 },
-      { type: 'circle', cx: 0,   cy: -27, r: 4, fill: '#c8c8c8', stroke: '#999', strokeWidth: 0.8 },
-      { type: 'circle', cx: 20,  cy: -27, r: 4, fill: '#c8c8c8', stroke: '#999', strokeWidth: 0.8 },
-      { type: 'circle', cx: -20, cy: 27, r: 4, fill: '#c8c8c8', stroke: '#999', strokeWidth: 0.8 },
-      { type: 'circle', cx: 0,   cy: 27, r: 4, fill: '#c8c8c8', stroke: '#999', strokeWidth: 0.8 },
-      { type: 'circle', cx: 20,  cy: 27, r: 4, fill: '#c8c8c8', stroke: '#999', strokeWidth: 0.8 },
-      // Schneider green band
-      { type: 'rect', x: -34, y: -20, width: 68, height: 8, fill: '#009530', stroke: 'none' },
-      { type: 'text', x: 0, y: -16, text: 'Schneider Electric', fontSize: 4.5, fill: '#fff', fontWeight: 'bold' },
-      // orange toggle
-      { type: 'rect', x: -30, y: -10, width: 60, height: 24, rx: 3, fill: '#f5a623', stroke: '#d4891e', strokeWidth: 1 },
-      { type: 'rect', x: -28, y: -8, width: 56, height: 9, rx: 2, fill: '#ffc84a', stroke: 'none' },
-      { type: 'text', x: 0, y: -3, text: 'I', fontSize: 8, fill: '#7a4800', fontWeight: 'bold' },
-      { type: 'text', x: 0, y: 8, text: 'O', fontSize: 7, fill: '#7a4800', fontWeight: 'bold' },
-      { type: 'rect', x: -28, y: 15, width: 56, height: 7, rx: 1, fill: '#fff', stroke: '#ddd', strokeWidth: 0.5 },
-      { type: 'text', x: 0, y: 18, text: 'iC60N  3P', fontSize: 5.5, fill: '#009530', fontWeight: 'bold' },
+      // ── drop shadow ──
+      { type: 'rect', x: -32, y: -32, width: 68, height: 70, rx: 5, fill: '#00000030', stroke: 'none', filter: 'url(#fShadowDeep)' },
+      // ── main body ──
+      { type: 'rect', x: -34, y: -34, width: 68, height: 70, rx: 5, fill: 'url(#gBodyGray)', stroke: '#999', strokeWidth: 1 },
+      // ── left edge highlight ──
+      { type: 'rect', x: -34, y: -34, width: 3, height: 70, rx: 2, fill: '#fff', stroke: 'none', opacity: 0.6 },
+      // ── top edge highlight ──
+      { type: 'rect', x: -34, y: -34, width: 68, height: 3, rx: 2, fill: '#fff', stroke: 'none', opacity: 0.6 },
+      // ── right shadow edge ──
+      { type: 'rect', x: 31, y: -28, width: 3, height: 58, rx: 1, fill: '#888', stroke: 'none', opacity: 0.5 },
+      // ── bottom shadow edge ──
+      { type: 'rect', x: -28, y: 33, width: 60, height: 3, rx: 1, fill: '#888', stroke: 'none', opacity: 0.5 },
+
+      // ── top terminal cap ──
+      { type: 'rect', x: -34, y: -34, width: 68, height: 16, rx: 5, fill: 'url(#gCap)', stroke: '#aaa', strokeWidth: 0.8 },
+      { type: 'rect', x: -33, y: -34, width: 66, height: 7, rx: 4, fill: '#fff', stroke: 'none', opacity: 0.5 },
+      // ── bottom terminal cap ──
+      { type: 'rect', x: -34, y: 20, width: 68, height: 16, rx: 5, fill: 'url(#gCap)', stroke: '#aaa', strokeWidth: 0.8 },
+      { type: 'rect', x: -33, y: 20, width: 66, height: 7, rx: 4, fill: '#fff', stroke: 'none', opacity: 0.4 },
+
+      // ── pole dividers ──
+      { type: 'line', x1: -11, y1: -18, x2: -11, y2: 20, stroke: '#bbb', strokeWidth: 1 },
+      { type: 'line', x1: 11,  y1: -18, x2: 11,  y2: 20, stroke: '#bbb', strokeWidth: 1 },
+
+      // ── wire stubs ──
+      { type: 'line', x1: -20, y1: -42, x2: -20, y2: -34, stroke: '#777', strokeWidth: 2 },
+      { type: 'line', x1: 0,   y1: -42, x2: 0,   y2: -34, stroke: '#777', strokeWidth: 2 },
+      { type: 'line', x1: 20,  y1: -42, x2: 20,  y2: -34, stroke: '#777', strokeWidth: 2 },
+      { type: 'line', x1: -20, y1: 36,  x2: -20, y2: 42,  stroke: '#777', strokeWidth: 2 },
+      { type: 'line', x1: 0,   y1: 36,  x2: 0,   y2: 42,  stroke: '#777', strokeWidth: 2 },
+      { type: 'line', x1: 20,  y1: 36,  x2: 20,  y2: 42,  stroke: '#777', strokeWidth: 2 },
+
+      // ── 3D screws (top) ──
+      { type: 'circle', cx: -20, cy: -26, r: 5.5, fill: '#aaa', stroke: 'none' },
+      { type: 'circle', cx: -20, cy: -26, r: 5,   fill: 'url(#gScrew)', stroke: '#888', strokeWidth: 0.8 },
+      { type: 'line',   x1: -22.5, y1: -26, x2: -17.5, y2: -26, stroke: '#666', strokeWidth: 1 },
+      { type: 'circle', cx: 0,   cy: -26, r: 5.5, fill: '#aaa', stroke: 'none' },
+      { type: 'circle', cx: 0,   cy: -26, r: 5,   fill: 'url(#gScrew)', stroke: '#888', strokeWidth: 0.8 },
+      { type: 'line',   x1: -2.5,  y1: -26, x2: 2.5,   y2: -26, stroke: '#666', strokeWidth: 1 },
+      { type: 'circle', cx: 20,  cy: -26, r: 5.5, fill: '#aaa', stroke: 'none' },
+      { type: 'circle', cx: 20,  cy: -26, r: 5,   fill: 'url(#gScrew)', stroke: '#888', strokeWidth: 0.8 },
+      { type: 'line',   x1: 17.5,  y1: -26, x2: 22.5,  y2: -26, stroke: '#666', strokeWidth: 1 },
+
+      // ── 3D screws (bottom) ──
+      { type: 'circle', cx: -20, cy: 28, r: 5.5, fill: '#aaa', stroke: 'none' },
+      { type: 'circle', cx: -20, cy: 28, r: 5,   fill: 'url(#gScrew)', stroke: '#888', strokeWidth: 0.8 },
+      { type: 'line',   x1: -22.5, y1: 28, x2: -17.5, y2: 28, stroke: '#666', strokeWidth: 1 },
+      { type: 'circle', cx: 0,   cy: 28, r: 5.5, fill: '#aaa', stroke: 'none' },
+      { type: 'circle', cx: 0,   cy: 28, r: 5,   fill: 'url(#gScrew)', stroke: '#888', strokeWidth: 0.8 },
+      { type: 'line',   x1: -2.5,  y1: 28, x2: 2.5,   y2: 28, stroke: '#666', strokeWidth: 1 },
+      { type: 'circle', cx: 20,  cy: 28, r: 5.5, fill: '#aaa', stroke: 'none' },
+      { type: 'circle', cx: 20,  cy: 28, r: 5,   fill: 'url(#gScrew)', stroke: '#888', strokeWidth: 0.8 },
+      { type: 'line',   x1: 17.5,  y1: 28, x2: 22.5,  y2: 28, stroke: '#666', strokeWidth: 1 },
+
+      // ── Schneider green band ──
+      { type: 'rect', x: -34, y: -18, width: 68, height: 9, fill: 'url(#gGreenSch)', stroke: 'none' },
+      { type: 'rect', x: -34, y: -18, width: 68, height: 4, fill: '#fff', stroke: 'none', opacity: 0.15 },
+      { type: 'text', x: 0, y: -13, text: 'Schneider Electric', fontSize: 4.5, fill: '#fff', fontWeight: 'bold' },
+
+      // ── orange toggle rocker ──
+      { type: 'rect', x: -31, y: -8, width: 62, height: 26, rx: 4, fill: '#00000020', stroke: 'none' },
+      { type: 'rect', x: -32, y: -9, width: 62, height: 26, rx: 4, fill: 'url(#gOrange)', stroke: '#c47a10', strokeWidth: 1 },
+      { type: 'rect', x: -30, y: -8, width: 58, height: 10, rx: 3, fill: '#fff', stroke: 'none', opacity: 0.35 },
+      { type: 'text', x: 0, y: -2, text: 'I', fontSize: 9, fill: '#7a3800', fontWeight: 'bold' },
+      { type: 'text', x: 0, y: 11, text: 'O', fontSize: 8, fill: '#7a3800', fontWeight: 'bold' },
+
+      // ── label strip ──
+      { type: 'rect', x: -30, y: 18, width: 60, height: 8, rx: 1.5, fill: '#fff', stroke: '#ccc', strokeWidth: 0.5 },
+      { type: 'text', x: 0, y: 22, text: 'iC60N  3P', fontSize: 5.5, fill: '#009530', fontWeight: 'bold' },
     ],
   },
 

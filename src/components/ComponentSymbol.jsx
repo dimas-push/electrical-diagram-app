@@ -1,11 +1,80 @@
 import { COMPONENT_DEFS } from '../data/components';
 
+// Global SVG defs (gradients for 3D effect) — injected once per SVG
+export function SvgDefs() {
+  return (
+    <defs>
+      {/* Gray plastic body */}
+      <linearGradient id="gBodyGray" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#f0f0f0"/>
+        <stop offset="40%" stopColor="#e2e2e2"/>
+        <stop offset="100%" stopColor="#c4c4c4"/>
+      </linearGradient>
+      {/* Light gray cap */}
+      <linearGradient id="gCap" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#eaeaea"/>
+        <stop offset="100%" stopColor="#c8c8c8"/>
+      </linearGradient>
+      {/* Orange handle */}
+      <linearGradient id="gOrange" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#ffd04a"/>
+        <stop offset="40%" stopColor="#f5a623"/>
+        <stop offset="100%" stopColor="#c47a10"/>
+      </linearGradient>
+      {/* Schneider green */}
+      <linearGradient id="gGreenSch" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#00b83a"/>
+        <stop offset="100%" stopColor="#006e22"/>
+      </linearGradient>
+      {/* ABB red */}
+      <linearGradient id="gRedABB" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#e53935"/>
+        <stop offset="100%" stopColor="#b71c1c"/>
+      </linearGradient>
+      {/* Siemens teal */}
+      <linearGradient id="gTealSie" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#00bcd4"/>
+        <stop offset="100%" stopColor="#00838f"/>
+      </linearGradient>
+      {/* Legrand white */}
+      <linearGradient id="gLeg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#ffffff"/>
+        <stop offset="100%" stopColor="#d8d8d8"/>
+      </linearGradient>
+      {/* Metal screw */}
+      <radialGradient id="gScrew" cx="35%" cy="30%" r="65%">
+        <stop offset="0%" stopColor="#e8e8e8"/>
+        <stop offset="60%" stopColor="#b0b0b0"/>
+        <stop offset="100%" stopColor="#787878"/>
+      </radialGradient>
+      {/* Terminal block */}
+      <linearGradient id="gTerminal" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#d8d8d8"/>
+        <stop offset="100%" stopColor="#a8a8a8"/>
+      </linearGradient>
+      {/* Blue toggle */}
+      <linearGradient id="gBlue" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stopColor="#64b5f6"/>
+        <stop offset="100%" stopColor="#1565c0"/>
+      </linearGradient>
+      {/* Drop shadow filter */}
+      <filter id="fShadow" x="-20%" y="-20%" width="150%" height="150%">
+        <feDropShadow dx="1.5" dy="2" stdDeviation="1.5" floodColor="#00000040"/>
+      </filter>
+      <filter id="fShadowDeep" x="-20%" y="-20%" width="160%" height="160%">
+        <feDropShadow dx="2" dy="3" stdDeviation="2.5" floodColor="#00000055"/>
+      </filter>
+    </defs>
+  );
+}
+
 function renderShape(shape, i, tintSelected) {
-  // if shape has explicit stroke/fill, use them (realistic mode); otherwise fall back to schematic color
   const stroke = shape.stroke !== undefined ? shape.stroke : (tintSelected ? '#6366f1' : '#555');
   const strokeWidth = shape.strokeWidth ?? 1;
   const fill = shape.fill !== undefined ? shape.fill : 'none';
-  const common = { stroke, strokeWidth, strokeLinecap: 'round', strokeLinejoin: 'round' };
+  const opacity = shape.opacity !== undefined ? shape.opacity : undefined;
+  const filter = shape.filter !== undefined ? shape.filter : undefined;
+  const common = { stroke, strokeWidth, strokeLinecap: 'round', strokeLinejoin: 'round', opacity, filter };
 
   switch (shape.type) {
     case 'line':
@@ -29,6 +98,7 @@ function renderShape(shape, i, tintSelected) {
           fontFamily="system-ui, sans-serif"
           fill={shape.fill ?? '#333'}
           stroke="none"
+          opacity={opacity}
           textAnchor={shape.anchor ?? 'middle'}
           dominantBaseline={shape.baseline ?? 'middle'}>
           {shape.text}

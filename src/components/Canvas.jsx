@@ -1,6 +1,6 @@
 import { useRef, useState, useCallback, useEffect, useMemo } from 'react';
 import { COMPONENT_DEFS } from '../data/components';
-import { ComponentOnCanvas } from './ComponentSymbol';
+import { ComponentOnCanvas, SvgDefs } from './ComponentSymbol';
 import WireLayer, { getPortWorld } from './WireLayer';
 import { simulate } from '../utils/simulate';
 
@@ -268,6 +268,7 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
       onDrop={handleDrop}
     >
       <svg ref={svgRef} id="diagram-canvas" width="100%" height="100%" style={{ display: 'block' }}>
+        <SvgDefs />
         <g transform={`translate(${vt.x},${vt.y}) scale(${vt.scale})`}>
           <rect data-bg="1" x={-5000} y={-5000} width={15000} height={15000} fill="transparent" />
           <g>{gridDots}</g>
