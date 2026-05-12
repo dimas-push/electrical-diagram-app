@@ -5,6 +5,7 @@ import { exportExcel } from '../utils/bom';
 const MODES = [
   { id: 'select', icon: '↖', label: 'Pilih',       hint: 'Klik untuk memilih • Drag untuk memindah • Ctrl+C/V salin' },
   { id: 'wire',   icon: '〰', label: 'Tarik Kabel', hint: 'Klik titik koneksi pertama, lalu klik titik koneksi kedua' },
+  { id: 'text',   icon: 'T',  label: 'Teks',        hint: 'Klik di kanvas untuk menambah teks atau keterangan' },
   { id: 'delete', icon: '✕', label: 'Hapus',       hint: 'Klik komponen atau kabel untuk menghapus' },
 ];
 
@@ -25,7 +26,7 @@ export default function Toolbar({
   mode, onModeChange, wireColor, onWireColorChange,
   diagram, canUndo, canRedo, onUndo, onRedo,
   simMode, onToggleSim, showTitleBlock, onToggleTitleBlock,
-  onShowBOM, projectInfo,
+  onShowBOM, onShowTemplates, onZoomToFit, onNew, projectInfo,
 }) {
   const [showWireMenu,   setShowWireMenu]   = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
@@ -121,14 +122,34 @@ export default function Toolbar({
 
         <div className="h-5 w-px bg-slate-200" />
 
+        {/* New diagram */}
+        <button onClick={onNew} title="Buat diagram baru"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 text-sm transition-colors">
+          ✦ <span className="hidden md:inline">Baru</span>
+        </button>
+
         {/* Simpan / Buka */}
-        <button onClick={() => saveDiagram(diagram.getState())} title="Simpan diagram ke file"
+        <button onClick={() => saveDiagram(diagram.getAllState())} title="Simpan diagram ke file"
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 text-sm transition-colors">
           💾 <span className="hidden md:inline">Simpan</span>
         </button>
         <button onClick={() => loadDiagram(diagram.loadDiagram)} title="Buka file diagram"
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 text-sm transition-colors">
           📂 <span className="hidden md:inline">Buka</span>
+        </button>
+
+        <div className="h-5 w-px bg-slate-200" />
+
+        {/* Template */}
+        <button onClick={onShowTemplates} title="Buka template diagram siap pakai"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-violet-200 bg-violet-50 text-violet-700 hover:bg-violet-100 text-sm transition-colors">
+          📐 <span className="hidden md:inline">Template</span>
+        </button>
+
+        {/* Zoom to fit */}
+        <button onClick={onZoomToFit} title="Sesuaikan tampilan ke semua komponen"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 text-sm transition-colors">
+          ⊡ <span className="hidden md:inline">Fit</span>
         </button>
 
         <div className="h-5 w-px bg-slate-200" />

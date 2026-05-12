@@ -70,7 +70,7 @@ export async function exportPDF() {
 }
 
 export function saveDiagram(state) {
-  const json = JSON.stringify({ version: 1, ...state }, null, 2);
+  const json = JSON.stringify({ version: 2, ...state }, null, 2);
   download(URL.createObjectURL(new Blob([json], { type: 'application/json' })), 'circuit-diagram.json');
 }
 

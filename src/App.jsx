@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDiagram } from './hooks/useDiagram';
 import Sidebar from './components/Sidebar';
 import Toolbar from './components/Toolbar';
@@ -6,6 +6,9 @@ import Canvas from './components/Canvas';
 import PropertiesPanel from './components/PropertiesPanel';
 import TitleBlock from './components/TitleBlock';
 import BOMPanel from './components/BOMPanel';
+import TemplatesModal from './components/TemplatesModal';
+import PageTabs from './components/PageTabs';
+import { saveDiagram } from './utils/export';
 
 export default function App() {
   const [mode,           setMode]           = useState('select');
@@ -13,12 +16,14 @@ export default function App() {
   const [simMode,        setSimMode]        = useState(false);
   const [showTitleBlock, setShowTitleBlock] = useState(false);
   const [showBOM,        setShowBOM]        = useState(false);
+  const [showTemplates,  setShowTemplates]  = useState(false);
   const [projectInfo,    setProjectInfo]    = useState({
     project: '', drawnBy: '', date: '', revision: 'A', description: '',
   });
 
   const diagram = useDiagram();
   const TITLE_H = 72;
+  const zoomToFitRef = useRef(null);
 
   // global copy/paste keyboard shortcuts
   useEffect(() => {
@@ -33,13 +38,23 @@ export default function App() {
   }, [diagram.copySelection, diagram.pasteClipboard]);
 
   const handleModeChange = (m) => {
-    if (simMode && m !== 'select') return; // lock mode during sim
+    if (simMode && m !== 'select') return;
     setMode(m);
   };
 
   const handleToggleSim = () => {
     setSimMode(s => !s);
     setMode('select');
+  };
+
+  const handleNew = () => {
+    if (window.confirm('Buat diagram baru? Semua perubahan yang belum disimpan akan hilang.')) {
+      diagram.clearAll();
+    }
+  };
+
+  const handleLoadTemplate = (data) => {
+    diagram.loadDiagram(data);
   };
 
   return (
@@ -53,19 +68,23 @@ export default function App() {
         simMode={simMode} onToggleSim={handleToggleSim}
         showTitleBlock={showTitleBlock} onToggleTitleBlock={() => setShowTitleBlock(s => !s)}
         onShowBOM={() => setShowBOM(true)}
+        onShowTemplates={() => setShowTemplates(true)}
+        onZoomToFit={() => zoomToFitRef.current?.()}
+        onNew={handleNew}
         projectInfo={projectInfo}
       />
 
       <div className="flex flex-1 overflow-hidden relative">
         <Sidebar />
 
-        <div className="flex-1 overflow-hidden relative">
+        <div className="flex-1 overflow-hidden relative flex flex-col">
           <Canvas
             diagram={diagram}
             mode={mode} onModeChange={handleModeChange}
             wireColor={wireColor}
             simMode={simMode}
             titleBlockHeight={showTitleBlock ? TITLE_H : 0}
+            onZoomToFitRef={zoomToFitRef}
           />
 
           {showTitleBlock && (
@@ -76,7 +95,6 @@ export default function App() {
           )}
         </div>
 
-        {/* Properties panel — component, wire, or multi-select */}
         {(diagram.selection.size > 0 || diagram.selectedWire) && (
           <PropertiesPanel
             placed={diagram.placed}
@@ -94,12 +112,28 @@ export default function App() {
         )}
       </div>
 
-      {/* BOM modal */}
+      {/* Page tabs */}
+      <PageTabs
+        pages={diagram.pages}
+        pageIdx={diagram.pageIdx}
+        onSwitch={diagram.switchPage}
+        onAdd={diagram.addPage}
+        onRename={diagram.renamePage}
+        onDelete={diagram.deletePage}
+      />
+
       {showBOM && (
         <BOMPanel
           placed={diagram.placed}
           wires={diagram.wires}
           onClose={() => setShowBOM(false)}
+        />
+      )}
+
+      {showTemplates && (
+        <TemplatesModal
+          onLoad={handleLoadTemplate}
+          onClose={() => setShowTemplates(false)}
         />
       )}
     </div>

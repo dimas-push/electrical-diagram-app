@@ -18,12 +18,12 @@ const SWITCHABLE = new Set([
   'switch_1g','switch_2g','sel_sw2','sel_sw3','ats',
 ]);
 
-export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode, titleBlockHeight = 0 }) {
+export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode, titleBlockHeight = 0, onZoomToFitRef }) {
   const {
     placed, wires, selection, selected, setSelected, selectedWire, setSelectedWire,
     toggleSelect, selectMany, clearSelection,
     addComponent, applyPositions, commitMove, deleteComponent, deleteSelected,
-    addWire, deleteWire, updateWire, switchStates, toggleSwitch,
+    addWire, deleteWire, updateWire, switchStates, toggleSwitch, addAnnotation,
   } = diagram;
 
   const svgRef  = useRef(null);
@@ -37,6 +37,22 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
   const [rubberBand, setRubberBand]  = useState(null); // { sx, sy, ex, ey } in world coords
 
   const defMap = useMemo(() => Object.fromEntries(COMPONENT_DEFS.map(d => [d.id, d])), []);
+
+  // zoom to fit all components
+  const zoomToFit = useCallback(() => {
+    if (!placed.length || !wrapRef.current) return;
+    const PAD = 60;
+    const xs = placed.map(c => c.x), ys = placed.map(c => c.y);
+    const minX = Math.min(...xs) - 40, maxX = Math.max(...xs) + 40;
+    const minY = Math.min(...ys) - 40, maxY = Math.max(...ys) + 40;
+    const { width, height } = wrapRef.current.getBoundingClientRect();
+    const scale = clamp(Math.min((width - PAD * 2) / (maxX - minX), (height - PAD * 2) / (maxY - minY)), MIN_SCALE, MAX_SCALE);
+    const x = (width - (maxX + minX) * scale) / 2;
+    const y = (height - (maxY + minY) * scale) / 2;
+    setVt({ x, y, scale });
+  }, [placed]);
+
+  useEffect(() => { if (onZoomToFitRef) onZoomToFitRef.current = zoomToFit; }, [zoomToFit, onZoomToFitRef]);
 
   const simResult = useMemo(() => {
     if (!simMode) return { energizedWires: new Set(), energizedComps: new Set() };
@@ -93,6 +109,12 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
     }
     if (e.target.dataset.bg) {
       clearSelection(); setSelectedWire(null); setPendingWire(null);
+      if (mode === 'text' && !simMode) {
+        const w = clientToWorld(e.clientX, e.clientY);
+        const text = window.prompt('Ketik teks anotasi:', 'Teks');
+        if (text) addAnnotation(w.x, w.y, text);
+        return;
+      }
       // start rubber band
       if (mode === 'select' && !simMode) {
         const w = clientToWorld(e.clientX, e.clientY);
@@ -223,6 +245,7 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
     : simMode ? 'default'
     : mode === 'wire' ? 'crosshair'
     : mode === 'delete' ? 'not-allowed'
+    : mode === 'text' ? 'text'
     : 'default';
 
   // rubber band in SVG coords
@@ -259,9 +282,25 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
             selectedWire={selectedWire}
           />
 
+          {/* text annotations */}
+          {placed.filter(c => c.defId === '__text__').map(comp => (
+            <g key={comp.id}
+              transform={`translate(${comp.x},${comp.y})`}
+              style={{ cursor: 'move' }}
+              onMouseDown={(e) => handleCompMouseDown(e, comp.id)}
+              onClick={(e) => { if (mode === 'delete') { e.stopPropagation(); deleteComponent(comp.id); } }}>
+              {selection.has(comp.id) && (
+                <rect x={-4} y={-14} width={(comp.label?.length || 4) * 7 + 8} height={20} rx={3}
+                  fill="#6366f120" stroke="#6366f1" strokeWidth={1.5} strokeDasharray="4 2" />
+              )}
+              <text x={0} y={0} fontSize={13} fill="#1e293b" fontFamily="system-ui,sans-serif"
+                fontWeight="600" style={{ userSelect: 'none' }}>{comp.label}</text>
+            </g>
+          ))}
+
           {placed.map(comp => {
             const def = defMap[comp.defId];
-            if (!def) return null;
+            if (!def || comp.defId === '__text__') return null;
             const isEnergized = simMode && simResult.energizedComps.has(comp.id);
             const isSwitchable = simMode && SWITCHABLE.has(comp.defId);
             return (

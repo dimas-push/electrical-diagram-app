@@ -6,7 +6,16 @@ const snap = (v) => Math.round(v / GRID) * GRID;
 let nextId = 1;
 const uid = () => `${nextId++}`;
 
+const STORAGE_KEY = 'diagram_autosave_v2';
 const EMPTY = { placed: [], wires: [] };
+
+function loadSaved() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch { return null; }
+}
 
 // IEC 81346 wire color → prefix
 const COLOR_PREFIX = {
@@ -90,8 +99,15 @@ function autoWireLabel(wires, color) {
 }
 
 export function useDiagram() {
+  const saved = loadSaved();
+  const [pages,      setPages]      = useState(() => saved?.pages || [{ id:'p1', name:'Halaman 1' }]);
+  const [pageIdx,    setPageIdx]    = useState(0);
+  const [pageStates, setPageStates] = useState(() => saved?.pageStates || { p1: EMPTY });
+
+  const currentPageId = pages[pageIdx]?.id || 'p1';
+
   const [past,    setPast]    = useState([]);
-  const [present, setPresent] = useState(EMPTY);
+  const [present, setPresent] = useState(() => pageStates[currentPageId] || EMPTY);
   const [future,  setFuture]  = useState([]);
 
   // selection = Set of component IDs
@@ -101,6 +117,56 @@ export function useDiagram() {
   const [clipboard,    setClipboard]    = useState(null); // { comps, wires }
 
   const { placed, wires } = present;
+
+  // sync present → pageStates
+  useEffect(() => {
+    setPageStates(ps => ({ ...ps, [currentPageId]: present }));
+  }, [present, currentPageId]);
+
+  // auto-save to localStorage
+  useEffect(() => {
+    setPageStates(ps => {
+      const updated = { ...ps, [currentPageId]: present };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ pages, pageStates: updated }));
+      return updated;
+    });
+  }, [present, pages, currentPageId]);
+
+  // switch page
+  const switchPage = useCallback((idx) => {
+    setPageStates(ps => ({ ...ps, [currentPageId]: present }));
+    setPageIdx(idx);
+    const newId = pages[idx]?.id;
+    setPresent(pageStates[newId] || EMPTY);
+    setPast([]); setFuture([]);
+    setSelection(new Set()); setSelectedWire(null);
+  }, [currentPageId, present, pages, pageStates]);
+
+  const addPage = useCallback(() => {
+    const id = uid();
+    const name = `Halaman ${pages.length + 1}`;
+    setPageStates(ps => ({ ...ps, [currentPageId]: present, [id]: EMPTY }));
+    setPages(p => [...p, { id, name }]);
+    setPageIdx(pages.length);
+    setPresent(EMPTY);
+    setPast([]); setFuture([]);
+    setSelection(new Set()); setSelectedWire(null);
+  }, [pages, currentPageId, present]);
+
+  const renamePage = useCallback((idx, name) => {
+    setPages(p => p.map((pg, i) => i === idx ? { ...pg, name } : pg));
+  }, []);
+
+  const deletePage = useCallback((idx) => {
+    if (pages.length === 1) return;
+    const newPages = pages.filter((_, i) => i !== idx);
+    const newIdx = Math.min(idx, newPages.length - 1);
+    setPages(newPages);
+    setPageIdx(newIdx);
+    setPresent(pageStates[newPages[newIdx].id] || EMPTY);
+    setPast([]); setFuture([]);
+    setSelection(new Set()); setSelectedWire(null);
+  }, [pages, pageStates]);
 
   // single selected id (for properties panel)
   const selected = selection.size === 1 ? [...selection][0] : null;
@@ -301,6 +367,12 @@ export function useDiagram() {
     setSwitchStates(s => ({ ...s, [id]: !s[id] }));
   }, []);
 
+  const addAnnotation = useCallback((x, y, text = 'Teks') => {
+    const id = uid();
+    commit({ ...present, placed: [...placed, { id, defId: '__text__', x: snap(x), y: snap(y), label: text, value: '', rotation: 0 }] });
+    setSelection(new Set([id]));
+  }, [present, placed, commit]);
+
   const loadDiagram = useCallback((data) => {
     const allIds = [...(data.placed || []).map(c => c.id), ...(data.wires || []).map(w => w.id)]
       .map(id => parseInt(id, 10)).filter(n => !isNaN(n));
@@ -308,6 +380,11 @@ export function useDiagram() {
     setPast([]); setPresent(data); setFuture([]);
     setSelection(new Set()); setSelectedWire(null); setSwitchStates({});
   }, []);
+
+  const clearAll = useCallback(() => {
+    commit(EMPTY);
+    setSelection(new Set()); setSelectedWire(null);
+  }, [commit]);
 
   return {
     placed, wires,
@@ -321,7 +398,11 @@ export function useDiagram() {
     deleteComponent, deleteSelected, updateComponent,
     addWire, deleteWire, updateWire,
     copySelection, pasteClipboard,
+    addAnnotation,
+    pages, pageIdx, switchPage, addPage, renamePage, deletePage,
+    clearAll,
     loadDiagram,
-    getState: () => present,
+    getState: () => ({ placed, wires }),
+    getAllState: () => ({ pages, pageStates: { ...pageStates, [currentPageId]: present } }),
   };
 }
