@@ -66,9 +66,7 @@ export default function WireLayer({
               const mx = (p.x + q.x) / 2, my = (p.y + q.y) / 2;
               // Horizontal segment: |dx|>|dy| (or dy≈0 for orthogonal)
               const isH = Math.abs(dy) < 1;
-              // Only inner segments (not anchored to a port) are draggable
-              const isDraggable = isSelected && !simMode && !onDeleteWire
-                && segIdx > 0 && segIdx < n - 2;
+              const isDraggable = isSelected && !simMode && !onDeleteWire;
               const cursor = onDeleteWire
                 ? 'pointer'
                 : isDraggable

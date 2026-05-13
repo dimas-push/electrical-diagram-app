@@ -249,16 +249,35 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
     }
   };
 
-  // wire segment drag — orthogonal axis-constrained
-  // segIdx: index in allPoints (> 0 && < n-2, so both endpoints are waypoints)
-  // isH: true = horizontal segment → drag ↕ (only Y changes)
-  //       false = vertical segment → drag ↔ (only X changes)
+  // Convert a port-adjacent segment to an inner segment by inserting a
+  // zero-length junction at the port position. Returns the new waypoints array
+  // and the corrected segIdx that points at the now-inner segment.
+  const prepDogLeg = useCallback((allPoints, segIdx) => {
+    const n   = allPoints.length;
+    const wps = allPoints.slice(1, -1).map(p => ({ ...p }));
+    if (segIdx === 0) {
+      wps.unshift({ x: allPoints[0].x, y: allPoints[0].y });
+      return { wps, newIdx: 1 };
+    }
+    if (segIdx === n - 2) {
+      wps.push({ x: allPoints[n - 1].x, y: allPoints[n - 1].y });
+      return { wps, newIdx: n - 2 }; // same numeric index; n grew by 1 so it's now inner
+    }
+    return { wps, newIdx: segIdx };
+  }, []);
+
+  // wire segment drag — orthogonal axis-constrained, ALL segments draggable
   const handleSegmentMouseDown = useCallback((e, wireId, segIdx, isH) => {
     if (simMode || mode === 'delete') return;
     const wire = wires.find(w => w.id === wireId);
     if (!wire) return;
-    setDraggingWire({ wireId, segIdx, isH, origWaypoints: [...(wire.waypoints || [])] });
-  }, [simMode, mode, wires]);
+    const origWaypoints = [...(wire.waypoints || [])];
+    const allPoints = getWirePoints(wire, compMap, defMap);
+    if (!allPoints) return;
+    const { wps, newIdx } = prepDogLeg(allPoints, segIdx);
+    if (newIdx !== segIdx) applyWireWaypoints(wireId, wps); // insert junction silently
+    setDraggingWire({ wireId, segIdx: newIdx, isH, origWaypoints });
+  }, [simMode, mode, wires, compMap, defMap, prepDogLeg, applyWireWaypoints]);
 
   const handleResetWire = useCallback((wireId) => {
     updateWire(wireId, { waypoints: [] });
