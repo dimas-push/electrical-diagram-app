@@ -68,10 +68,26 @@ export function SvgDefs() {
   );
 }
 
+// Auto-upgrade flat fills to gradients for instant 3D
+const AUTO_GRADIENT = {
+  '#f5f5f5': 'url(#gBodyGray)', '#efefef': 'url(#gBodyGray)', '#f0f0f0': 'url(#gBodyGray)',
+  '#e0e0e0': 'url(#gCap)',      '#d8d8d8': 'url(#gCap)',      '#e8e8e8': 'url(#gCap)',
+  '#f5a623': 'url(#gOrange)',   '#ffa726': 'url(#gOrange)',
+  '#009530': 'url(#gGreenSch)', '#00953f': 'url(#gGreenSch)',
+  '#c8c8c8': 'url(#gScrew)',    '#bbb':    'url(#gScrew)',
+  '#e53935': 'url(#gRedABB)',   '#f44336': 'url(#gRedABB)',
+  '#00bcd4': 'url(#gTealSie)',  '#009688': 'url(#gTealSie)',
+  '#1565c0': 'url(#gBlue)',     '#1976d2': 'url(#gBlue)',
+};
+
 function renderShape(shape, i, tintSelected) {
   const stroke = shape.stroke !== undefined ? shape.stroke : (tintSelected ? '#6366f1' : '#555');
   const strokeWidth = shape.strokeWidth ?? 1;
-  const fill = shape.fill !== undefined ? shape.fill : 'none';
+  const rawFill = shape.fill !== undefined ? shape.fill : 'none';
+  // auto-upgrade flat fills to gradient (skip if already gradient, transparent, or 'none')
+  const fill = (rawFill && rawFill !== 'none' && !rawFill.startsWith('url(') && !tintSelected)
+    ? (AUTO_GRADIENT[rawFill] || rawFill)
+    : rawFill;
   const opacity = shape.opacity !== undefined ? shape.opacity : undefined;
   const filter = shape.filter !== undefined ? shape.filter : undefined;
   const common = { stroke, strokeWidth, strokeLinecap: 'round', strokeLinejoin: 'round', opacity, filter };
@@ -258,6 +274,7 @@ export function ComponentOnCanvas({
     <g
       transform={`translate(${comp.x},${comp.y}) rotate(${comp.rotation || 0})`}
       style={{ cursor }}
+      filter="url(#fShadow)"
       onMouseDown={(!wireMode && !isSwitchable) ? onMouseDown : undefined}
       onClick={onClick}
     >
