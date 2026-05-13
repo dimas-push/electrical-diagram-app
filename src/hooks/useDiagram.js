@@ -127,12 +127,7 @@ export function useDiagram() {
 
   const { placed, wires } = present;
 
-  // sync present → pageStates
-  useEffect(() => {
-    setPageStates(ps => ({ ...ps, [currentPageId]: present }));
-  }, [present, currentPageId]);
-
-  // auto-save to localStorage
+  // sync present → pageStates + auto-save (single effect, no race)
   useEffect(() => {
     setPageStates(ps => {
       const updated = { ...ps, [currentPageId]: present };
@@ -142,24 +137,25 @@ export function useDiagram() {
   }, [present, pages, currentPageId]);
 
   // switch page
+  const resetInteraction = () => {
+    setPast([]); setFuture([]);
+    setSelection(new Set()); setSelectedWire(null); setSwitchStates({});
+  };
+
   const switchPage = useCallback((idx) => {
     setPageStates(ps => ({ ...ps, [currentPageId]: present }));
     setPageIdx(idx);
-    const newId = pages[idx]?.id;
-    setPresent(pageStates[newId] || EMPTY);
-    setPast([]); setFuture([]);
-    setSelection(new Set()); setSelectedWire(null);
+    setPresent(pageStates[pages[idx]?.id] || EMPTY);
+    resetInteraction();
   }, [currentPageId, present, pages, pageStates]);
 
   const addPage = useCallback(() => {
     const id = uid();
-    const name = `Halaman ${pages.length + 1}`;
     setPageStates(ps => ({ ...ps, [currentPageId]: present, [id]: EMPTY }));
-    setPages(p => [...p, { id, name }]);
+    setPages(p => [...p, { id, name: `Halaman ${p.length + 1}` }]);
     setPageIdx(pages.length);
     setPresent(EMPTY);
-    setPast([]); setFuture([]);
-    setSelection(new Set()); setSelectedWire(null);
+    resetInteraction();
   }, [pages, currentPageId, present]);
 
   const renamePage = useCallback((idx, name) => {
@@ -173,8 +169,7 @@ export function useDiagram() {
     setPages(newPages);
     setPageIdx(newIdx);
     setPresent(pageStates[newPages[newIdx].id] || EMPTY);
-    setPast([]); setFuture([]);
-    setSelection(new Set()); setSelectedWire(null);
+    resetInteraction();
   }, [pages, pageStates]);
 
   // single selected id (for properties panel)
@@ -355,6 +350,9 @@ export function useDiagram() {
 
   // ── wires ─────────────────────────────────────────────────────────────────
   const addWire = useCallback((fromComp, fromPort, toComp, toPort, color) => {
+    const fComp = placed.find(c => c.id === fromComp);
+    const tComp = placed.find(c => c.id === toComp);
+    if (!fComp || !tComp) return;
     const dup = wires.find(w =>
       (w.fromComp === fromComp && w.fromPort === fromPort && w.toComp === toComp && w.toPort === toPort) ||
       (w.fromComp === toComp   && w.fromPort === toPort   && w.toComp === fromComp && w.toPort === fromPort));
@@ -380,10 +378,8 @@ export function useDiagram() {
   // push history entry after drag ends
   const commitWireWaypointsEnd = useCallback((id, origWaypoints) => {
     const wire = present.wires.find(w => w.id === id);
-    if (!wire) return;
-    if (JSON.stringify(wire.waypoints) === JSON.stringify(origWaypoints)) return;
-    const before = { ...present, wires: present.wires.map(w => w.id === id ? { ...w, waypoints: origWaypoints } : w) };
-    setPast(p => [...p, before]);
+    if (!wire || JSON.stringify(wire.waypoints) === JSON.stringify(origWaypoints)) return;
+    setPast(p => [...p, { ...present, wires: present.wires.map(w => w.id === id ? { ...w, waypoints: origWaypoints } : w) }]);
     setFuture([]);
   }, [present]);
 

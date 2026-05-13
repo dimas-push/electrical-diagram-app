@@ -222,8 +222,9 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
       const minY = Math.min(sy, ey), maxY = Math.max(sy, ey);
       // only select if dragged at least a few pixels
       if (maxX - minX > 4 || maxY - minY > 4) {
+        const R = 40; // half typical component size
         const ids = placed
-          .filter(c => c.x >= minX && c.x <= maxX && c.y >= minY && c.y <= maxY)
+          .filter(c => c.x + R >= minX && c.x - R <= maxX && c.y + R >= minY && c.y - R <= maxY)
           .map(c => c.id);
         selectMany(ids);
       }
@@ -234,8 +235,11 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
   const handlePortClick = (compId, portIdx) => {
     if (mode !== 'wire') return;
     const comp = placed.find(c => c.id === compId);
-    const def  = defMap[comp.defId];
+    if (!comp) return;
+    const def = defMap[comp.defId];
+    if (!def) return;
     const world = getPortWorld(comp, def, portIdx);
+    if (!world) return;
     if (!pendingWire) {
       setPendingWire({ compId, portIdx, x1: world.x, y1: world.y, x2: world.x, y2: world.y });
     } else {
@@ -260,6 +264,9 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
     updateWire(wireId, { waypoints: [] });
   }, [updateWire]);
 
+  // clear pending wire whenever mode changes
+  useEffect(() => { setPendingWire(null); }, [mode]);
+
   // keyboard
   useEffect(() => {
     const onKey = (e) => {
@@ -277,14 +284,6 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
     return () => window.removeEventListener('keydown', onKey);
   }, [simMode, deleteSelected, onModeChange]);
 
-  // grid
-  const gridDots = useMemo(() => {
-    const dots = [];
-    for (let x = 0; x <= 2000; x += GRID)
-      for (let y = 0; y <= 2000; y += GRID)
-        dots.push(<circle key={`${x}-${y}`} cx={x} cy={y} r={0.8 / vt.scale} fill="#cbd5e1" />);
-    return dots;
-  }, [vt.scale]);
 
   const cursor = spaceDown || panning ? 'grab'
     : simMode ? 'default'
@@ -314,12 +313,18 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
     >
       <svg ref={svgRef} id="diagram-canvas" width="100%" height="100%" style={{ display: 'block' }}>
         <SvgDefs />
+        <defs>
+          <pattern id="gridPat" width={GRID} height={GRID} patternUnits="userSpaceOnUse">
+            <circle cx={0} cy={0} r={0.6} fill="#cbd5e1" />
+          </pattern>
+        </defs>
         <g transform={`translate(${vt.x},${vt.y}) scale(${vt.scale})`}>
           <rect data-bg="1" x={-5000} y={-5000} width={15000} height={15000} fill="transparent" />
-          <g>{gridDots}</g>
+          <rect x={-5000} y={-5000} width={15000} height={15000} fill="url(#gridPat)" pointerEvents="none" />
 
           <WireLayer
-            placed={placed} wires={wires}
+            wires={wires}
+            compMap={compMap} defMap={defMap}
             onDeleteWire={mode === 'delete' ? deleteWire : undefined}
             onSelectWire={mode !== 'delete' ? (id) => { setSelectedWire(id); clearSelection(); } : undefined}
             pendingWire={pendingWire ? { ...pendingWire, color: wireColor } : null}

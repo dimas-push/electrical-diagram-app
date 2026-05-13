@@ -1,5 +1,3 @@
-import { COMPONENT_DEFS } from '../data/components';
-
 export function getPortWorld(comp, def, portIndex) {
   if (!def || portIndex >= def.ports.length) return null;
   const p = def.ports[portIndex];
@@ -28,12 +26,10 @@ export function getWirePoints(w, compMap, defMap) {
 }
 
 export default function WireLayer({
-  placed, wires, onDeleteWire, pendingWire,
+  wires, compMap, defMap, onDeleteWire, pendingWire,
   energizedWires, simMode, onSelectWire, selectedWire,
   onSegmentMouseDown, onResetWire,
 }) {
-  const compMap = Object.fromEntries(placed.map(c => [c.id, c]));
-  const defMap  = Object.fromEntries(COMPONENT_DEFS.map(d => [d.id, d]));
 
   return (
     <g>
