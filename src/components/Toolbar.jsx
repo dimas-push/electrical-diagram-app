@@ -97,7 +97,8 @@ export default function Toolbar({
               onMouseLeave={() => setShowWireMenu(false)}>
               <p className="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-400">Jenis Kabel</p>
               {WIRE_COLORS.map(wc => (
-                <button key={wc.color} onClick={() => { onWireColorChange(wc.color); setShowWireMenu(false); }}
+                <button key={wc.color}
+                  onClick={(e) => { e.stopPropagation(); onWireColorChange(wc.color); setShowWireMenu(false); }}
                   className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm text-left hover:bg-slate-50 transition-colors
                     ${wireColor === wc.color ? 'bg-indigo-50 text-indigo-700 font-medium' : 'text-slate-700'}`}>
                   <div className="w-5 h-3 rounded-sm shrink-0" style={{ background: wc.color }} />
@@ -133,7 +134,7 @@ export default function Toolbar({
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 text-sm transition-colors">
           💾 <span className="hidden md:inline">Simpan</span>
         </button>
-        <button onClick={() => loadDiagram(diagram.loadDiagram)} title="Buka file diagram"
+        <button onClick={() => loadDiagram(data => diagram.loadDiagram(data))} title="Buka file diagram"
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 text-sm transition-colors">
           📂 <span className="hidden md:inline">Buka</span>
         </button>
@@ -179,21 +180,21 @@ export default function Toolbar({
             <div className="absolute top-full right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg z-50 py-1 min-w-[160px]"
               onMouseLeave={() => setShowExportMenu(false)}>
               <p className="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-400">Format Gambar</p>
-              <button onClick={() => { exportPNG(); setShowExportMenu(false); }}
+              <button onClick={(e) => { e.stopPropagation(); exportPNG(); setShowExportMenu(false); }}
                 className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
                 🖼 Gambar PNG
               </button>
-              <button onClick={() => { exportPDF(); setShowExportMenu(false); }}
+              <button onClick={(e) => { e.stopPropagation(); exportPDF(); setShowExportMenu(false); }}
                 className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
                 📄 Dokumen PDF
               </button>
-              <button onClick={() => { exportSVG(); setShowExportMenu(false); }}
+              <button onClick={(e) => { e.stopPropagation(); exportSVG(); setShowExportMenu(false); }}
                 className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
                 ✏ Vektor SVG
               </button>
               <div className="border-t border-slate-100 my-1" />
               <p className="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-400">Laporan</p>
-              <button onClick={() => { exportExcel(diagram.placed, diagram.wires, projectInfo); setShowExportMenu(false); }}
+              <button onClick={(e) => { e.stopPropagation(); exportExcel(diagram.placed, diagram.wires, projectInfo); setShowExportMenu(false); }}
                 className="w-full flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
                 📊 Excel (BOM)
               </button>

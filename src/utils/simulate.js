@@ -113,6 +113,7 @@ export function simulate(placed, wires, switchStates) {
   placed.forEach(comp => {
     if (!BUSBAR.has(comp.defId)) return;
     const def = COMPONENT_DEFS.find(d => d.id === comp.defId);
+    if (!def) return;
     def.ports.forEach((_, i) => liveSeeds.add(nodeId(comp.id, i)));
   });
 
@@ -121,6 +122,7 @@ export function simulate(placed, wires, switchStates) {
   placed.forEach(comp => {
     if (!GROUND.has(comp.defId)) return;
     const def = COMPONENT_DEFS.find(d => d.id === comp.defId);
+    if (!def) return;
     def.ports.forEach((_, i) => neutralSeeds.add(nodeId(comp.id, i)));
   });
 

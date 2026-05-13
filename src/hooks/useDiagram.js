@@ -143,11 +143,15 @@ export function useDiagram() {
   };
 
   const switchPage = useCallback((idx) => {
-    setPageStates(ps => ({ ...ps, [currentPageId]: present }));
+    const newId = pages[idx]?.id;
+    setPageStates(ps => {
+      const updated = { ...ps, [currentPageId]: present };
+      setPresent(updated[newId] || EMPTY); // read freshly-updated map
+      return updated;
+    });
     setPageIdx(idx);
-    setPresent(pageStates[pages[idx]?.id] || EMPTY);
     resetInteraction();
-  }, [currentPageId, present, pages, pageStates]);
+  }, [currentPageId, present, pages]);
 
   const addPage = useCallback(() => {
     const id = uid();

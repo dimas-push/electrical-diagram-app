@@ -185,19 +185,18 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
       const wire = wires.find(wr => wr.id === wireId);
       if (wire) {
         const allPoints = getWirePoints(wire, compMap, defMap);
-        if (allPoints) {
+        if (allPoints && segIdx > 0 && segIdx + 1 < allPoints.length) {
           const snap = v => Math.round(v / GRID) * GRID;
           const newPts = allPoints.map(p => ({ ...p }));
           if (isH) {
             const newY = snap(w.y);
-            newPts[segIdx].y     = newY; // waypoint at segIdx (not a port since segIdx>0)
-            newPts[segIdx + 1].y = newY; // waypoint at segIdx+1 (not a port since segIdx+1<n-1)
+            newPts[segIdx].y     = newY;
+            newPts[segIdx + 1].y = newY;
           } else {
             const newX = snap(w.x);
             newPts[segIdx].x     = newX;
             newPts[segIdx + 1].x = newX;
           }
-          // strip port endpoints to get just waypoints
           applyWireWaypoints(wireId, newPts.slice(1, -1));
         }
       }
@@ -292,7 +291,7 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
   useEffect(() => {
     const onKey = (e) => {
       if ((e.key === 'Delete' || e.key === 'Backspace') && !simMode) {
-        if (['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+        if (['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) return;
         deleteSelected();
       }
       if (e.key === 'Escape') { setPendingWire(null); onModeChange('select'); }
