@@ -66,7 +66,7 @@ export default function WireLayer({
               const mx = (p.x + q.x) / 2, my = (p.y + q.y) / 2;
               // Horizontal segment: |dx|>|dy| (or dy≈0 for orthogonal)
               const isH = Math.abs(dy) < 1;
-              const isDraggable = isSelected && !simMode && !onDeleteWire;
+              const isDraggable = !simMode && !onDeleteWire;
               const cursor = onDeleteWire
                 ? 'pointer'
                 : isDraggable
@@ -90,9 +90,10 @@ export default function WireLayer({
                       if (!simMode && !onDeleteWire) onResetWire?.(w.id);
                     }}
                     onMouseDown={(e) => {
-                      if (isDraggable) {
+                      if (isDraggable && onSegmentMouseDown) {
                         e.stopPropagation();
-                        onSegmentMouseDown?.(e, w.id, segIdx, isH);
+                        onSelectWire?.(w.id); // select immediately on mousedown
+                        onSegmentMouseDown(e, w.id, segIdx, isH);
                       }
                     }}
                   />

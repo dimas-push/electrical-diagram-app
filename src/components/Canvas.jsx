@@ -271,13 +271,15 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
     if (simMode || mode === 'delete') return;
     const wire = wires.find(w => w.id === wireId);
     if (!wire) return;
+    setSelectedWire(wireId);
+    clearSelection();
     const origWaypoints = [...(wire.waypoints || [])];
     const allPoints = getWirePoints(wire, compMap, defMap);
     if (!allPoints) return;
     const { wps, newIdx } = prepDogLeg(allPoints, segIdx);
-    if (newIdx !== segIdx) applyWireWaypoints(wireId, wps); // insert junction silently
+    if (newIdx !== segIdx) applyWireWaypoints(wireId, wps);
     setDraggingWire({ wireId, segIdx: newIdx, isH, origWaypoints });
-  }, [simMode, mode, wires, compMap, defMap, prepDogLeg, applyWireWaypoints]);
+  }, [simMode, mode, wires, compMap, defMap, prepDogLeg, applyWireWaypoints, setSelectedWire, clearSelection]);
 
   const handleResetWire = useCallback((wireId) => {
     updateWire(wireId, { waypoints: [] });
