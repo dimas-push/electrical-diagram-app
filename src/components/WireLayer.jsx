@@ -10,7 +10,7 @@ export function getPortWorld(comp, def, portIndex) {
   };
 }
 
-// Returns array of {x,y} points for the full wire path
+// Returns all points on the wire path including the two port endpoints
 export function getWirePoints(w, compMap, defMap) {
   const fromComp = compMap[w.fromComp];
   const toComp   = compMap[w.toComp];
@@ -18,19 +18,19 @@ export function getWirePoints(w, compMap, defMap) {
   const a = getPortWorld(fromComp, defMap[fromComp.defId], w.fromPort);
   const b = getPortWorld(toComp,   defMap[toComp.defId],   w.toPort);
   if (!a || !b) return null;
-  const waypoints = w.waypoints || [];
-  if (waypoints.length === 0) {
-    // default orthogonal elbow
+  const wps = w.waypoints || [];
+  if (wps.length === 0) {
+    // default orthogonal elbow: H → V → H
     const mx = (a.x + b.x) / 2;
     return [a, { x: mx, y: a.y }, { x: mx, y: b.y }, b];
   }
-  return [a, ...waypoints, b];
+  return [a, ...wps, b];
 }
 
 export default function WireLayer({
   placed, wires, onDeleteWire, pendingWire,
   energizedWires, simMode, onSelectWire, selectedWire,
-  onWaypointMouseDown, onSegmentMouseDown, onWaypointDoubleClick,
+  onSegmentMouseDown, onResetWire,
 }) {
   const compMap = Object.fromEntries(placed.map(c => [c.id, c]));
   const defMap  = Object.fromEntries(COMPONENT_DEFS.map(d => [d.id, d]));
@@ -42,20 +42,18 @@ export default function WireLayer({
         if (!allPoints) return null;
 
         const pts = allPoints.map(p => `${p.x},${p.y}`).join(' ');
+        const n   = allPoints.length;
         const isEnergized = simMode && energizedWires?.has(w.id);
         const isSelected  = selectedWire === w.id;
         const strokeColor = isEnergized ? '#ffeb3b' : (w.color || '#334155');
         const strokeW     = isEnergized ? 3 : 2;
-        const waypoints   = w.waypoints || [];
-
-        // label at midpoint
-        const midPt = allPoints[Math.floor(allPoints.length / 2)];
+        const midPt       = allPoints[Math.floor(n / 2)];
 
         return (
           <g key={w.id}>
             {isEnergized && (
-              <polyline points={pts} fill="none" stroke="#ffeb3b" strokeWidth={8} opacity={0.3}
-                strokeLinecap="round" strokeLinejoin="round" pointerEvents="none" />
+              <polyline points={pts} fill="none" stroke="#ffeb3b" strokeWidth={8}
+                opacity={0.3} strokeLinecap="round" strokeLinejoin="round" pointerEvents="none" />
             )}
             <polyline points={pts} fill="none" stroke={strokeColor}
               strokeWidth={isSelected ? strokeW + 1.5 : strokeW}
@@ -63,50 +61,60 @@ export default function WireLayer({
               strokeDasharray={isSelected ? '5 3' : undefined}
               pointerEvents="none" />
 
-            {/* per-segment hit areas */}
+            {/* per-segment interactive areas */}
             {allPoints.slice(0, -1).map((p, segIdx) => {
-              const q = allPoints[segIdx + 1];
-              const mx = (p.x + q.x) / 2;
-              const my = (p.y + q.y) / 2;
-              const dx = q.x - p.x;
-              const dy = q.y - p.y;
+              const q   = allPoints[segIdx + 1];
+              const dx  = q.x - p.x, dy = q.y - p.y;
               const len = Math.sqrt(dx * dx + dy * dy) || 1;
               const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-              const canDrag = isSelected && !simMode && !onDeleteWire && onSegmentMouseDown;
+              const mx = (p.x + q.x) / 2, my = (p.y + q.y) / 2;
+              // Horizontal segment: |dx|>|dy| (or dy≈0 for orthogonal)
+              const isH = Math.abs(dy) < 1;
+              // Only inner segments (not anchored to a port) are draggable
+              const isDraggable = isSelected && !simMode && !onDeleteWire
+                && segIdx > 0 && segIdx < n - 2;
+              const cursor = onDeleteWire
+                ? 'pointer'
+                : isDraggable
+                  ? (isH ? 'ns-resize' : 'ew-resize')
+                  : 'pointer';
+
               return (
-                <rect
-                  key={segIdx}
-                  x={-len / 2} y={-8} width={len} height={16}
-                  fill="transparent"
-                  transform={`translate(${mx},${my}) rotate(${angle})`}
-                  style={{ cursor: onDeleteWire ? 'pointer' : canDrag ? 'move' : 'pointer' }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (onDeleteWire) onDeleteWire(w.id);
-                    else onSelectWire?.(w.id);
-                  }}
-                  onMouseDown={(e) => {
-                    if (canDrag) {
+                <g key={segIdx}>
+                  <rect
+                    x={-len / 2} y={-8} width={len} height={16}
+                    fill="transparent"
+                    transform={`translate(${mx},${my}) rotate(${angle})`}
+                    style={{ cursor }}
+                    onClick={(e) => {
                       e.stopPropagation();
-                      onSegmentMouseDown(e, w.id, segIdx, mx, my);
-                    }
-                  }}
-                />
+                      if (onDeleteWire) onDeleteWire(w.id);
+                      else onSelectWire?.(w.id);
+                    }}
+                    onDoubleClick={(e) => {
+                      e.stopPropagation();
+                      if (!simMode && !onDeleteWire) onResetWire?.(w.id);
+                    }}
+                    onMouseDown={(e) => {
+                      if (isDraggable) {
+                        e.stopPropagation();
+                        onSegmentMouseDown?.(e, w.id, segIdx, isH);
+                      }
+                    }}
+                  />
+                  {/* direction indicator shown on draggable segments when wire is selected */}
+                  {isDraggable && (
+                    <g transform={`translate(${mx},${my})`} pointerEvents="none">
+                      <circle r={7} fill="#6366f1" opacity={0.18} />
+                      <text textAnchor="middle" dominantBaseline="middle"
+                        fontSize={9} fill="#6366f1" fontWeight="bold">
+                        {isH ? '↕' : '↔'}
+                      </text>
+                    </g>
+                  )}
+                </g>
               );
             })}
-
-            {/* waypoint drag handles (visible when selected) */}
-            {isSelected && !simMode && !onDeleteWire && waypoints.map((wp, wpIdx) => (
-              <g key={`wp-${wpIdx}`}>
-                <circle cx={wp.x} cy={wp.y} r={7} fill="transparent" />
-                <circle cx={wp.x} cy={wp.y} r={5}
-                  fill="#6366f1" stroke="#fff" strokeWidth={1.5}
-                  style={{ cursor: 'move' }}
-                  onMouseDown={(e) => { e.stopPropagation(); onWaypointMouseDown?.(e, w.id, wpIdx); }}
-                  onDoubleClick={(e) => { e.stopPropagation(); onWaypointDoubleClick?.(w.id, wpIdx); }}
-                />
-              </g>
-            ))}
 
             {/* wire label */}
             {w.label && (

@@ -1,7 +1,7 @@
 import { useRef, useState, useCallback, useEffect, useMemo } from 'react';
 import { COMPONENT_DEFS } from '../data/components';
 import { ComponentOnCanvas, SvgDefs } from './ComponentSymbol';
-import WireLayer, { getPortWorld } from './WireLayer';
+import WireLayer, { getPortWorld, getWirePoints } from './WireLayer';
 import { simulate } from '../utils/simulate';
 
 const GRID = 20;
@@ -39,7 +39,8 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
   // { wireId, idx (into waypoints array), origWaypoints }
   const [draggingWire, setDraggingWire] = useState(null);
 
-  const defMap = useMemo(() => Object.fromEntries(COMPONENT_DEFS.map(d => [d.id, d])), []);
+  const defMap  = useMemo(() => Object.fromEntries(COMPONENT_DEFS.map(d => [d.id, d])), []);
+  const compMap = useMemo(() => Object.fromEntries(placed.map(c => [c.id, c])), [placed]);
 
   // zoom to fit all components
   const zoomToFit = useCallback(() => {
@@ -180,18 +181,30 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
       applyPositions(posMap);
     }
     if (draggingWire) {
-      const snappedX = Math.round(w.x / GRID) * GRID;
-      const snappedY = Math.round(w.y / GRID) * GRID;
-      const wire = wires.find(wr => wr.id === draggingWire.wireId);
+      const { wireId, segIdx, isH } = draggingWire;
+      const wire = wires.find(wr => wr.id === wireId);
       if (wire) {
-        const newWaypoints = [...(wire.waypoints || [])];
-        newWaypoints[draggingWire.idx] = { x: snappedX, y: snappedY };
-        applyWireWaypoints(draggingWire.wireId, newWaypoints);
+        const allPoints = getWirePoints(wire, compMap, defMap);
+        if (allPoints) {
+          const snap = v => Math.round(v / GRID) * GRID;
+          const newPts = allPoints.map(p => ({ ...p }));
+          if (isH) {
+            const newY = snap(w.y);
+            newPts[segIdx].y     = newY; // waypoint at segIdx (not a port since segIdx>0)
+            newPts[segIdx + 1].y = newY; // waypoint at segIdx+1 (not a port since segIdx+1<n-1)
+          } else {
+            const newX = snap(w.x);
+            newPts[segIdx].x     = newX;
+            newPts[segIdx + 1].x = newX;
+          }
+          // strip port endpoints to get just waypoints
+          applyWireWaypoints(wireId, newPts.slice(1, -1));
+        }
       }
     }
     if (rubberBand) setRubberBand(rb => rb ? { ...rb, ex: w.x, ey: w.y } : rb);
     if (pendingWire) setPendingWire(pw => pw ? { ...pw, x2: w.x, y2: w.y } : pw);
-  }, [panning, dragging, draggingWire, rubberBand, pendingWire, applyPositions, applyWireWaypoints, clientToWorld, wires]);
+  }, [panning, dragging, draggingWire, rubberBand, pendingWire, applyPositions, applyWireWaypoints, clientToWorld, wires, compMap, defMap]);
 
   const handleMouseUp = useCallback(() => {
     if (panning) { setPanning(null); return; }
@@ -232,34 +245,20 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
     }
   };
 
-  // wire waypoint handlers
-  const handleWaypointMouseDown = useCallback((e, wireId, wpIdx) => {
+  // wire segment drag — orthogonal axis-constrained
+  // segIdx: index in allPoints (> 0 && < n-2, so both endpoints are waypoints)
+  // isH: true = horizontal segment → drag ↕ (only Y changes)
+  //       false = vertical segment → drag ↔ (only X changes)
+  const handleSegmentMouseDown = useCallback((e, wireId, segIdx, isH) => {
     if (simMode || mode === 'delete') return;
     const wire = wires.find(w => w.id === wireId);
     if (!wire) return;
-    setDraggingWire({ wireId, idx: wpIdx, origWaypoints: [...(wire.waypoints || [])] });
+    setDraggingWire({ wireId, segIdx, isH, origWaypoints: [...(wire.waypoints || [])] });
   }, [simMode, mode, wires]);
 
-  const handleSegmentMouseDown = useCallback((e, wireId, segIdx, mx, my) => {
-    if (simMode || mode === 'delete') return;
-    const wire = wires.find(w => w.id === wireId);
-    if (!wire) return;
-    const origWaypoints = [...(wire.waypoints || [])];
-    const newWaypoints  = [...origWaypoints];
-    // segIdx in allPoints → insert at waypoints[segIdx] (allPoints[0]=fromPort, allPoints[1..n]=waypoints)
-    newWaypoints.splice(segIdx, 0, {
-      x: Math.round(mx / GRID) * GRID,
-      y: Math.round(my / GRID) * GRID,
-    });
-    applyWireWaypoints(wireId, newWaypoints);
-    setDraggingWire({ wireId, idx: segIdx, origWaypoints });
-  }, [simMode, mode, wires, applyWireWaypoints]);
-
-  const handleWaypointDoubleClick = useCallback((wireId, wpIdx) => {
-    const wire = wires.find(w => w.id === wireId);
-    if (!wire) return;
-    updateWire(wireId, { waypoints: (wire.waypoints || []).filter((_, i) => i !== wpIdx) });
-  }, [wires, updateWire]);
+  const handleResetWire = useCallback((wireId) => {
+    updateWire(wireId, { waypoints: [] });
+  }, [updateWire]);
 
   // keyboard
   useEffect(() => {
@@ -327,9 +326,8 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
             energizedWires={simResult.energizedWires}
             simMode={simMode}
             selectedWire={selectedWire}
-            onWaypointMouseDown={handleWaypointMouseDown}
             onSegmentMouseDown={handleSegmentMouseDown}
-            onWaypointDoubleClick={handleWaypointDoubleClick}
+            onResetWire={handleResetWire}
           />
 
           {/* text annotations */}
