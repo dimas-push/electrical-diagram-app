@@ -23,7 +23,8 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
     placed, wires, selection, selected, setSelected, selectedWire, setSelectedWire,
     toggleSelect, selectMany, clearSelection,
     addComponent, applyPositions, commitMove, deleteComponent, deleteSelected,
-    addWire, deleteWire, updateWire, switchStates, toggleSwitch, addAnnotation,
+    addWire, deleteWire, updateWire, applyWireWaypoints, commitWireWaypointsEnd,
+    switchStates, toggleSwitch, addAnnotation,
   } = diagram;
 
   const svgRef  = useRef(null);
@@ -35,6 +36,8 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
   const [spaceDown, setSpaceDown] = useState(false);
   const [pendingWire, setPendingWire] = useState(null);
   const [rubberBand, setRubberBand]  = useState(null); // { sx, sy, ex, ey } in world coords
+  // { wireId, idx (into waypoints array), origWaypoints }
+  const [draggingWire, setDraggingWire] = useState(null);
 
   const defMap = useMemo(() => Object.fromEntries(COMPONENT_DEFS.map(d => [d.id, d])), []);
 
@@ -176,15 +179,29 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
       );
       applyPositions(posMap);
     }
+    if (draggingWire) {
+      const snappedX = Math.round(w.x / GRID) * GRID;
+      const snappedY = Math.round(w.y / GRID) * GRID;
+      const wire = wires.find(wr => wr.id === draggingWire.wireId);
+      if (wire) {
+        const newWaypoints = [...(wire.waypoints || [])];
+        newWaypoints[draggingWire.idx] = { x: snappedX, y: snappedY };
+        applyWireWaypoints(draggingWire.wireId, newWaypoints);
+      }
+    }
     if (rubberBand) setRubberBand(rb => rb ? { ...rb, ex: w.x, ey: w.y } : rb);
     if (pendingWire) setPendingWire(pw => pw ? { ...pw, x2: w.x, y2: w.y } : pw);
-  }, [panning, dragging, rubberBand, pendingWire, applyPositions, clientToWorld]);
+  }, [panning, dragging, draggingWire, rubberBand, pendingWire, applyPositions, applyWireWaypoints, clientToWorld, wires]);
 
   const handleMouseUp = useCallback(() => {
     if (panning) { setPanning(null); return; }
     if (dragging) {
       commitMove(dragging.ids, dragging.origPositions);
       setDragging(null);
+    }
+    if (draggingWire) {
+      commitWireWaypointsEnd(draggingWire.wireId, draggingWire.origWaypoints);
+      setDraggingWire(null);
     }
     if (rubberBand) {
       const { sx, sy, ex, ey } = rubberBand;
@@ -199,7 +216,7 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
       }
       setRubberBand(null);
     }
-  }, [panning, dragging, rubberBand, commitMove, placed, selectMany]);
+  }, [panning, dragging, draggingWire, rubberBand, commitMove, commitWireWaypointsEnd, placed, selectMany]);
 
   const handlePortClick = (compId, portIdx) => {
     if (mode !== 'wire') return;
@@ -214,6 +231,35 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
       setPendingWire(null);
     }
   };
+
+  // wire waypoint handlers
+  const handleWaypointMouseDown = useCallback((e, wireId, wpIdx) => {
+    if (simMode || mode === 'delete') return;
+    const wire = wires.find(w => w.id === wireId);
+    if (!wire) return;
+    setDraggingWire({ wireId, idx: wpIdx, origWaypoints: [...(wire.waypoints || [])] });
+  }, [simMode, mode, wires]);
+
+  const handleSegmentMouseDown = useCallback((e, wireId, segIdx, mx, my) => {
+    if (simMode || mode === 'delete') return;
+    const wire = wires.find(w => w.id === wireId);
+    if (!wire) return;
+    const origWaypoints = [...(wire.waypoints || [])];
+    const newWaypoints  = [...origWaypoints];
+    // segIdx in allPoints → insert at waypoints[segIdx] (allPoints[0]=fromPort, allPoints[1..n]=waypoints)
+    newWaypoints.splice(segIdx, 0, {
+      x: Math.round(mx / GRID) * GRID,
+      y: Math.round(my / GRID) * GRID,
+    });
+    applyWireWaypoints(wireId, newWaypoints);
+    setDraggingWire({ wireId, idx: segIdx, origWaypoints });
+  }, [simMode, mode, wires, applyWireWaypoints]);
+
+  const handleWaypointDoubleClick = useCallback((wireId, wpIdx) => {
+    const wire = wires.find(w => w.id === wireId);
+    if (!wire) return;
+    updateWire(wireId, { waypoints: (wire.waypoints || []).filter((_, i) => i !== wpIdx) });
+  }, [wires, updateWire]);
 
   // keyboard
   useEffect(() => {
@@ -281,6 +327,9 @@ export default function Canvas({ diagram, mode, onModeChange, wireColor, simMode
             energizedWires={simResult.energizedWires}
             simMode={simMode}
             selectedWire={selectedWire}
+            onWaypointMouseDown={handleWaypointMouseDown}
+            onSegmentMouseDown={handleSegmentMouseDown}
+            onWaypointDoubleClick={handleWaypointDoubleClick}
           />
 
           {/* text annotations */}

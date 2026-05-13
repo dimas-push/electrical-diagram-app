@@ -372,6 +372,21 @@ export function useDiagram() {
     commit({ ...present, wires: wires.map(w => w.id === id ? { ...w, ...patch } : w) });
   }, [present, wires, commit]);
 
+  // live-update wire waypoints during drag (no history push)
+  const applyWireWaypoints = useCallback((id, waypoints) => {
+    setPresent(p => ({ ...p, wires: p.wires.map(w => w.id === id ? { ...w, waypoints } : w) }));
+  }, []);
+
+  // push history entry after drag ends
+  const commitWireWaypointsEnd = useCallback((id, origWaypoints) => {
+    const wire = present.wires.find(w => w.id === id);
+    if (!wire) return;
+    if (JSON.stringify(wire.waypoints) === JSON.stringify(origWaypoints)) return;
+    const before = { ...present, wires: present.wires.map(w => w.id === id ? { ...w, waypoints: origWaypoints } : w) };
+    setPast(p => [...p, before]);
+    setFuture([]);
+  }, [present]);
+
   const toggleSwitch = useCallback((id) => {
     setSwitchStates(s => ({ ...s, [id]: !s[id] }));
   }, []);
@@ -405,7 +420,7 @@ export function useDiagram() {
     undo, redo,
     addComponent, moveComponent, moveSelection, applyPositions, commitMove,
     deleteComponent, deleteSelected, updateComponent,
-    addWire, deleteWire, updateWire,
+    addWire, deleteWire, updateWire, applyWireWaypoints, commitWireWaypointsEnd,
     copySelection, pasteClipboard,
     addAnnotation,
     pages, pageIdx, switchPage, addPage, renamePage, deletePage,
