@@ -37,7 +37,11 @@ export function exportPNG() {
     ctx.scale(2, 2);
     ctx.drawImage(img, 0, 0);
     URL.revokeObjectURL(url);
-    canvas.toBlob(blob => download(URL.createObjectURL(blob), 'circuit-diagram.png'), 'image/png');
+    canvas.toBlob(blob => {
+      const blobUrl = URL.createObjectURL(blob);
+      download(blobUrl, 'circuit-diagram.png');
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+    }, 'image/png');
   };
   img.src = url;
 }
@@ -55,7 +59,12 @@ export async function exportPDF() {
   clone.insertBefore(bg, clone.firstChild);
   const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(clone)], { type: 'image/svg+xml' }));
   const img = new Image();
-  await new Promise(res => { img.onload = res; img.src = url; });
+  await new Promise((res, rej) => {
+    img.onload = res;
+    img.onerror = () => rej(new Error('Gagal memuat gambar SVG'));
+    setTimeout(() => rej(new Error('Timeout konversi SVG')), 10000);
+    img.src = url;
+  }).catch(err => { URL.revokeObjectURL(url); alert(err.message); throw err; });
   const canvas = document.createElement('canvas');
   canvas.width = width * 2; canvas.height = height * 2;
   const ctx = canvas.getContext('2d');
@@ -85,7 +94,8 @@ export function loadDiagram(callback) {
     reader.onload = (ev) => {
       try {
         const data = JSON.parse(ev.target.result);
-        if (data.placed && data.wires) callback({ placed: data.placed, wires: data.wires });
+        if (Array.isArray(data.placed) && Array.isArray(data.wires))
+          callback({ placed: data.placed, wires: data.wires });
         else alert('File tidak valid — bukan format diagram yang dikenal.');
       } catch {
         alert('Gagal membaca file. Pastikan file adalah JSON yang valid.');
