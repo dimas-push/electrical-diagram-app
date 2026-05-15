@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0f172a"/>
+  <!-- Grid dots -->
+  <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+    <circle cx="0" cy="0" r="1" fill="#334155" opacity="0.8"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- Decorative circuit lines -->
+  <g stroke="#4f46e5" stroke-width="2" fill="none" opacity="0.3">
+    <polyline points="100,200 200,200 200,300 400,300"/>
+    <polyline points="400,300 500,300 500,200 700,200"/>
+    <polyline points="700,200 800,200 800,400 1000,400"/>
+    <polyline points="100,400 300,400 300,200"/>
+    <circle cx="400" cy="300" r="5" fill="#4f46e5"/>
+    <circle cx="700" cy="200" r="5" fill="#4f46e5"/>
+  </g>
+
+  <!-- Component boxes -->
+  <rect x="180" y="180" width="40" height="40" rx="4" fill="none" stroke="#6366f1" stroke-width="1.5" opacity="0.5"/>
+  <rect x="480" y="180" width="40" height="40" rx="4" fill="none" stroke="#6366f1" stroke-width="1.5" opacity="0.5"/>
+  <rect x="780" y="380" width="40" height="40" rx="4" fill="none" stroke="#6366f1" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- Center glow -->
+  <ellipse cx="600" cy="315" rx="300" ry="180" fill="#4f46e5" opacity="0.06"/>
+
+  <!-- Logo icon -->
+  <circle cx="520" cy="255" r="36" fill="#4f46e5"/>
+  <path d="M528 232 L514 258 H522 L520 278 L534 252 H526 Z" fill="#fbbf24"/>
+
+  <!-- Title -->
+  <text x="568" y="248" font-family="system-ui, -apple-system, sans-serif" font-size="52" font-weight="800" fill="white">Wiring</text>
+  <text x="568" y="248" font-family="system-ui, -apple-system, sans-serif" font-size="52" font-weight="800" fill="white" dx="148">Lab</text>
+  <text x="568" y="248" font-family="system-ui, -apple-system, sans-serif" font-size="52" font-weight="800" fill="#94a3b8" dx="148">Lab</text>
+
+  <!-- Subtitle -->
+  <text x="600" y="310" font-family="system-ui, -apple-system, sans-serif" font-size="22" fill="#94a3b8" text-anchor="middle">Editor Diagram Listrik Profesional — Gratis</text>
+
+  <!-- Feature badges -->
+  <rect x="270" y="360" width="180" height="38" rx="19" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="360" y="384" font-family="system-ui, sans-serif" font-size="15" fill="#94a3b8" text-anchor="middle">200+ Komponen</text>
+
+  <rect x="510" y="360" width="180" height="38" rx="19" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="600" y="384" font-family="system-ui, sans-serif" font-size="15" fill="#94a3b8" text-anchor="middle">Simulasi Rangkaian</text>
+
+  <rect x="750" y="360" width="180" height="38" rx="19" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="840" y="384" font-family="system-ui, sans-serif" font-size="15" fill="#94a3b8" text-anchor="middle">Ekspor PNG / PDF</text>
+
+  <!-- URL -->
+  <text x="600" y="450" font-family="system-ui, sans-serif" font-size="16" fill="#475569" text-anchor="middle">dimas-push.github.io/electrical-diagram-app</text>
+</svg>
