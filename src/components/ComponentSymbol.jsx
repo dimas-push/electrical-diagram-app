@@ -298,6 +298,24 @@ export function ComponentOnCanvas({
 
       {def.symbol.map((s, i) => renderShape(s, i, isSelected))}
 
+      {/* dynamic amp/sensitivity rating on component body */}
+      {def.ampRatingSlot && comp.value && (
+        <text
+          x={def.ampRatingSlot.x}
+          y={def.ampRatingSlot.y}
+          fontSize={def.ampRatingSlot.fontSize ?? 6}
+          fill={def.ampRatingSlot.fill ?? '#333'}
+          fontWeight={def.ampRatingSlot.fontWeight ?? 'bold'}
+          stroke="none"
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fontFamily="system-ui, sans-serif"
+          style={{ userSelect: 'none' }}
+        >
+          {comp.value}
+        </text>
+      )}
+
       {/* animation overlay */}
       <AnimationLayer defId={comp.defId} switchClosed={switchClosed} isEnergized={isEnergized} />
 

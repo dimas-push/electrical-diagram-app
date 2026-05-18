@@ -11,9 +11,9 @@ function getBrand(defId) {
 
 function getModel(defId) {
   const map = {
-    sch_mcb1:'Easy9', sch_mcb3:'iC60N', sch_rccb:'iID', sch_contactor:'LC1D',
-    abb_mcb1:'S200', abb_mcb3:'S200', abb_rccb:'F200', abb_contactor:'AF series',
-    sie_mcb1:'5SL', sie_mcb3:'5SL', sie_rccb:'5SV',
+    sch_mcb1:'Easy9', sch_mcb1_ic60n:'iC60N', sch_mcb3:'iC60N', sch_rccb:'iID', sch_contactor:'LC1D',
+    abb_mcb1:'S201', abb_mcb3:'S203', abb_rccb:'F201', abb_contactor:'AF series',
+    sie_mcb1:'5SL4', sie_mcb3:'5SL6', sie_rccb:'5SV',
     leg_mcb1:'DX³', leg_mcb3:'DX³',
   };
   return map[defId] || '-';
@@ -27,13 +27,16 @@ export function generateBOM(placed) {
   return placed.map((c, i) => {
     const def = COMPONENT_DEFS.find(d => d.id === c.defId);
     return {
-      No:      i + 1,
-      TAG:     c.label || `${c.defId.toUpperCase()}_${i + 1}`,
-      Tipe:    def?.name || c.defId,
-      Merek:   getBrand(c.defId),
-      Model:   getModel(c.defId),
-      Rating:  c.value || '-',
-      Jumlah:  1,
+      No:            i + 1,
+      TAG:           c.label || `${c.defId.toUpperCase()}_${i + 1}`,
+      Tipe:          def?.name || c.defId,
+      Merek:         getBrand(c.defId),
+      Model:         getModel(c.defId),
+      Rating:        c.value || '-',
+      'No. Katalog': def?.specs?.catalogNumber || '-',
+      'Icu':         def?.specs?.Icu || '-',
+      'Standar':     def?.specs?.standard || '-',
+      Jumlah:        1,
     };
   });
 }

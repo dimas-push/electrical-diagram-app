@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { COMPONENT_DEFS } from '../data/components';
 
 const GRID = 20;
 const snap = (v) => Math.round(v / GRID) * GRID;
@@ -29,7 +30,7 @@ const COLOR_PREFIX = {
 // IEC 81346 equipment TAG prefix by component type
 const IEC_TAG = {
   // Q — switching / circuit protection
-  sch_mcb1:'Q', sch_mcb3:'Q', abb_mcb1:'Q', abb_mcb3:'Q',
+  sch_mcb1:'Q', sch_mcb1_ic60n:'Q', sch_mcb3:'Q', abb_mcb1:'Q', abb_mcb3:'Q',
   sie_mcb1:'Q', sie_mcb3:'Q', leg_mcb1:'Q', leg_mcb3:'Q',
   // F — fuses, overloads, RCDs
   fuse:'F', fuse_nh:'F', overload_th:'F',
@@ -253,7 +254,9 @@ export function useDiagram() {
   const addComponent = useCallback((defId, x, y) => {
     const id = uid();
     const label = autoTag(placed, defId);
-    commit({ ...present, placed: [...placed, { id, defId, x: snap(x), y: snap(y), label, value: '', rotation: 0 }] });
+    const def = COMPONENT_DEFS.find(d => d.id === defId);
+    const defaultValue = def?.specs?.ampOptions?.[2] ?? def?.specs?.sensitivityOptions?.[0] ?? '';
+    commit({ ...present, placed: [...placed, { id, defId, x: snap(x), y: snap(y), label, value: defaultValue, rotation: 0 }] });
     setSwitchStates(s => ({ ...s, [id]: DEFAULT_CLOSED.has(defId) }));
     setSelection(new Set([id])); setSelectedWire(null);
     return id;

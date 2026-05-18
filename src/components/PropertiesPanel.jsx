@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { COMPONENT_DEFS } from '../data/components';
+import SpecSheet from './SpecSheet';
 
 const WIRE_COLORS = [
   { label: 'L1',  color: '#a0522d' },
@@ -73,6 +75,16 @@ export default function PropertiesPanel({
   if (!comp) return null;
   const def = COMPONENT_DEFS.find(d => d.id === comp.defId);
 
+  return <ComponentPanel comp={comp} def={def} onUpdate={onUpdate} onDelete={onDelete} />;
+}
+
+function ComponentPanel({ comp, def, onUpdate, onDelete }) {
+  const [showSpec, setShowSpec] = useState(false);
+  const ampOpts = def?.specs?.ampOptions;
+  const sensOpts = def?.specs?.sensitivityOptions;
+  const ratingOpts = ampOpts || sensOpts;
+  const ratingLabel = sensOpts ? 'Sensitivitas' : 'Amp Rating';
+
   return (
     <aside className="w-52 bg-white border-l border-slate-200 p-4 flex flex-col gap-3 shrink-0 overflow-y-auto">
       <div>
@@ -88,10 +100,23 @@ export default function PropertiesPanel({
       </label>
 
       <label className="flex flex-col gap-1">
-        <span className="text-xs text-slate-500">Nilai / Rating</span>
-        <input className="border border-slate-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400"
-          value={comp.value} placeholder="e.g. 16A, 5.5kW"
-          onChange={e => onUpdate(comp.id, { value: e.target.value })} />
+        <span className="text-xs text-slate-500">{ratingLabel}</span>
+        {ratingOpts ? (
+          <select
+            className="border border-slate-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400"
+            value={comp.value}
+            onChange={e => onUpdate(comp.id, { value: e.target.value })}
+          >
+            <option value="">— pilih —</option>
+            {ratingOpts.map(a => (
+              <option key={a} value={a}>{a}</option>
+            ))}
+          </select>
+        ) : (
+          <input className="border border-slate-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400"
+            value={comp.value} placeholder="e.g. 16A, 5.5kW"
+            onChange={e => onUpdate(comp.id, { value: e.target.value })} />
+        )}
       </label>
 
       {/* rotation */}
@@ -112,6 +137,15 @@ export default function PropertiesPanel({
         </div>
       </div>
 
+      {def?.specs && (
+        <button
+          onClick={() => setShowSpec(true)}
+          className="py-1.5 rounded text-xs bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors"
+        >
+          📋 Lembar Spesifikasi
+        </button>
+      )}
+
       <div className="flex gap-2 pt-1">
         <button onClick={() => onDelete(comp.id)}
           className="flex-1 py-1.5 rounded text-xs bg-red-50 text-red-600 hover:bg-red-100 transition-colors">
@@ -120,6 +154,8 @@ export default function PropertiesPanel({
       </div>
 
       <p className="mt-auto text-[10px] text-slate-300 text-center">Klik di luar untuk membatalkan pilihan</p>
+
+      {showSpec && <SpecSheet def={def} comp={comp} onClose={() => setShowSpec(false)} />}
     </aside>
   );
 }
