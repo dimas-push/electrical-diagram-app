@@ -27,6 +27,7 @@ export default function Toolbar({
   diagram, canUndo, canRedo, onUndo, onRedo,
   simMode, onToggleSim, showTitleBlock, onToggleTitleBlock,
   onShowBOM, onShowTemplates, onZoomToFit, onNew, projectInfo,
+  onTidyWires,
 }) {
   const [showWireMenu,   setShowWireMenu]   = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
@@ -78,6 +79,13 @@ export default function Toolbar({
             ↪ <span className="hidden md:inline text-xs">Ulangi</span>
           </button>
         </div>
+
+        {/* Rapikan kabel */}
+        <button onClick={onTidyWires} title="Reset semua waypoint kabel agar rapi"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200
+            bg-white text-slate-600 hover:bg-teal-50 hover:text-teal-700 hover:border-teal-300 text-sm transition-colors">
+          ⬡ <span className="hidden md:inline">Rapikan</span>
+        </button>
 
         <div className="h-5 w-px bg-slate-200" />
 

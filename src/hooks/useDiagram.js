@@ -413,6 +413,11 @@ export function useDiagram() {
     setSelection(new Set()); setSelectedWire(null);
   }, [commit]);
 
+  const tidyAllWires = useCallback(() => {
+    const newWires = wires.map(w => ({ ...w, waypoints: [] }));
+    commit({ ...present, wires: newWires });
+  }, [present, wires, commit]);
+
   return {
     placed, wires,
     selection, selected, setSelected, toggleSelect, selectMany, clearSelection,
@@ -423,7 +428,7 @@ export function useDiagram() {
     undo, redo,
     addComponent, moveComponent, moveSelection, applyPositions, commitMove,
     deleteComponent, deleteSelected, updateComponent,
-    addWire, deleteWire, updateWire, applyWireWaypoints, commitWireWaypointsEnd,
+    addWire, deleteWire, updateWire, applyWireWaypoints, commitWireWaypointsEnd, tidyAllWires,
     copySelection, pasteClipboard,
     addAnnotation,
     pages, pageIdx, switchPage, addPage, renamePage, deletePage,

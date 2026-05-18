@@ -72,6 +72,7 @@ export default function App() {
         onZoomToFit={() => zoomToFitRef.current?.()}
         onNew={handleNew}
         projectInfo={projectInfo}
+        onTidyWires={diagram.tidyAllWires}
       />
 
       <div className="flex flex-1 overflow-hidden relative">

@@ -18,9 +18,17 @@ export function getWirePoints(w, compMap, defMap) {
   if (!a || !b) return null;
   const wps = w.waypoints || [];
   if (wps.length === 0) {
-    // default orthogonal elbow: H → V → H
-    const mx = (a.x + b.x) / 2;
-    return [a, { x: mx, y: a.y }, { x: mx, y: b.y }, b];
+    const dx = Math.abs(b.x - a.x);
+    const dy = Math.abs(b.y - a.y);
+    if (dy > dx) {
+      // koneksi vertikal: V → H → V (rapi untuk topologi panel atas-bawah)
+      const my = Math.round((a.y + b.y) / 2 / 20) * 20;
+      return [a, { x: a.x, y: my }, { x: b.x, y: my }, b];
+    } else {
+      // koneksi horizontal: H → V → H
+      const mx = Math.round((a.x + b.x) / 2 / 20) * 20;
+      return [a, { x: mx, y: a.y }, { x: mx, y: b.y }, b];
+    }
   }
   return [a, ...wps, b];
 }
